@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="24" fill="#0a0a0a"/>
+  <g transform="translate(10, 10)">
+    <text x="60" y="68" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="42" fill="#ffffff" text-anchor="end" letter-spacing="-2">OEI</text>
+    <path d="M68 40 L84 54 L68 68" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

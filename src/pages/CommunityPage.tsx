@@ -85,7 +85,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
                         <div className="way-number">02</div>
                         <h3>Improve Documentation</h3>
                         <p>Help clarify CLI usage, create example configurations, or translate guides for international developers.</p>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-link">Docs Repo →</a>
+                        <a href="https://github.com/okelo0121/OEI1" target="_blank" rel="noopener noreferrer" className="text-link">Docs Repo →</a>
                     </div>
 
                     <div className="way-card">
@@ -99,7 +99,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
                         <div className="way-number">04</div>
                         <h3>Report &amp; Verify Issues</h3>
                         <p>Submit bug reports, propose security RFCs, or participate in open protocol discussions.</p>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-link">GitHub Discussions →</a>
+                        <a href="https://github.com/okelo0121/OEI1" target="_blank" rel="noopener noreferrer" className="text-link">GitHub Discussions →</a>
                     </div>
                 </div>
 

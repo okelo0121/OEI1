@@ -30,7 +30,7 @@ const pluginList: PluginItem[] = [
         downloads: "142K",
         installCmd: "oei plugin add @oei/git-security",
         capabilities: ["Force-push interception", "Secret scanning", "Branch protection"],
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/okelo0121/OEI1",
     },
     {
         id: "solana-verifier",
@@ -43,7 +43,7 @@ const pluginList: PluginItem[] = [
         downloads: "98K",
         installCmd: "oei plugin add @oei/solana-verifier",
         capabilities: ["On-chain verification", "Ed25519 signatures", "Reputation check"],
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/okelo0121/OEI1",
     },
     {
         id: "docker-inspect",
@@ -56,7 +56,7 @@ const pluginList: PluginItem[] = [
         downloads: "85K",
         installCmd: "oei plugin add @oei/docker-inspect",
         capabilities: ["Privileged container flag audit", "Host mount warning", "Root execution detection"],
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/okelo0121/OEI1",
     },
     {
         id: "npm-audit-pro",
@@ -69,7 +69,7 @@ const pluginList: PluginItem[] = [
         downloads: "45K",
         installCmd: "oei plugin add @oei/npm-audit-pro",
         capabilities: ["Typo-squatting detection", "Lifecycle script warning", "Peer dependency check"],
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/okelo0121/OEI1",
     },
     {
         id: "python-bytecode",
@@ -82,7 +82,7 @@ const pluginList: PluginItem[] = [
         downloads: "32K",
         installCmd: "oei plugin add @oei/python-bytecode",
         capabilities: ["Bytecode inspection", "Socket creation audit", "Setup.py parsing"],
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/okelo0121/OEI1",
     },
     {
         id: "terraform-guard",
@@ -95,7 +95,7 @@ const pluginList: PluginItem[] = [
         downloads: "67K",
         installCmd: "oei plugin add @oei/terraform-guard",
         capabilities: ["Plan diff analysis", "S3 public read check", "DB deletion warning"],
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/okelo0121/OEI1",
     },
 ];
 

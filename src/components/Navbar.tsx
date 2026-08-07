@@ -95,13 +95,6 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 >
                     Community
                 </a>
-                <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    GitHub
-                </a>
 
                 <div className="mobile-actions">
                     <a
@@ -112,7 +105,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                         Get Started
                     </a>
                     <a
-                        href="https://github.com"
+                        href="https://github.com/okelo0121/OEI1"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="button button-light"
@@ -132,7 +125,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 </a>
 
                 <a
-                    href="https://github.com"
+                    href="https://github.com/okelo0121/OEI1"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="button button-light"

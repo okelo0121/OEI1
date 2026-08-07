@@ -46,7 +46,7 @@ export function Footer({ onNavigate }: FooterProps) {
 
                 <div className="footer-column">
                     <h4>Community</h4>
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://github.com/okelo0121/OEI1" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Discussions</a>
                     <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Discord</a>
                     <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Blog</a>

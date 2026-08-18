@@ -515,7 +515,7 @@ function EcosystemSection({ onNavigate }: { onNavigate: (route: string) => void 
                         reputation, and verification.
                     </p>
 
-                    <a href="#registry" onClick={(e) => { e.preventDefault(); onNavigate("/registry"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="text-link">
+                    <a href="#registry" onClick={(e) => { e.preventDefault(); onNavigate("/registry"); }} className="text-link">
                         Explore the registry <span>→</span>
                     </a>
                 </div>
@@ -695,12 +695,12 @@ function FinalCTA({ onNavigate }: { onNavigate: (route: string) => void }) {
                 </div>
 
                 <div className="cta-actions">
-                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-dark-contrast">
+                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); }} className="button button-dark-contrast">
                         Install OEI CLI
                         <span className="btn-terminal-icon">&gt;_</span>
                     </a>
 
-                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-light-contrast">
+                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); }} className="button button-light-contrast">
                         Read the Docs
                         <span>→</span>
                     </a>
@@ -729,12 +729,12 @@ export function LandingPage({ onNavigate }: { onNavigate: (route: string) => voi
                         </p>
 
                         <div className="hero-actions">
-                            <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-dark-contrast button-large">
+                            <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); }} className="button button-dark-contrast button-large">
                                 Try OEI CLI
                                 <span className="btn-terminal-icon">&gt;_</span>
                             </a>
 
-                            <a href="#api" onClick={(e) => { e.preventDefault(); onNavigate("/api"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-light-contrast button-large">
+                            <a href="#api" onClick={(e) => { e.preventDefault(); onNavigate("/api"); }} className="button button-light-contrast button-large">
                                 Explore API
                                 <span>→</span>
                             </a>

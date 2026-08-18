@@ -6,19 +6,17 @@ interface FooterProps {
 }
 
 export function Footer({ onNavigate }: FooterProps) {
-    const handleNavClick = (e: React.MouseEvent, route: string) => {
+    const handleNavClick = (e: React.MouseEvent | React.KeyboardEvent, route: string) => {
         e.preventDefault();
         onNavigate(route);
-        window.location.hash = route === "/" ? "" : route;
-        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (
         <footer className="footer-wrapper">
             <div className="footer">
                 <div className="footer-brand">
-                    <div className="footer-logo" onClick={(e) => handleNavClick(e, "/")}>
-                        <Logo />
+                    <div className="footer-logo">
+                        <Logo onClick={(e) => handleNavClick(e, "/")} />
                     </div>
 
                     <p>
@@ -54,9 +52,9 @@ export function Footer({ onNavigate }: FooterProps) {
 
                 <div className="footer-column">
                     <h4>Legal</h4>
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#terms">Terms of Service</a>
-                    <a href="#security">Security</a>
+                    <span className="footer-link-placeholder">Privacy Policy</span>
+                    <span className="footer-link-placeholder">Terms of Service</span>
+                    <span className="footer-link-placeholder">Security</span>
                 </div>
 
                 <div className="footer-newsletter">

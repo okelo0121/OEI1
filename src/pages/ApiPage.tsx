@@ -151,7 +151,7 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
                     </aside>
 
                     {/* Right: API Header, Diagram, Code Explorer & Errors */}
-                    <main className="api-main-area">
+                    <div className="api-main-area">
                         {/* API Header */}
                         <div className="docs-header">
                             <div className="eyebrow">API Reference</div>
@@ -266,7 +266,7 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
                                 </div>
                             </div>
                         </div>
-                    </main>
+                    </div>
                 </div>
             </section>
         </div>

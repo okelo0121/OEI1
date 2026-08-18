@@ -12,25 +12,25 @@ import { McpPage } from "./src/pages/McpPage";
 import { CommunityPage } from "./src/pages/CommunityPage";
 import { RegistryPage } from "./src/pages/RegistryPage";
 
-function App() {
-    const getInitialRoute = () => {
-        const hash = window.location.hash.replace("#", "");
-        if (["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"].includes("/" + hash)) {
-            return "/" + hash;
-        }
-        return "/";
-    };
+const KNOWN_ROUTES = ["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"];
 
-    const [currentRoute, setCurrentRoute] = useState<string>(getInitialRoute);
+function resolveRoute(): string {
+    const hash = window.location.hash.replace("#", "");
+    if (KNOWN_ROUTES.includes("/" + hash)) {
+        return "/" + hash;
+    }
+    if (hash) {
+        console.warn(`Unknown route "#${hash}"; falling back to the landing page.`);
+    }
+    return "/";
+}
+
+function App() {
+    const [currentRoute, setCurrentRoute] = useState<string>(resolveRoute);
 
     useEffect(() => {
         const handleHashChange = () => {
-            const hash = window.location.hash.replace("#", "");
-            if (["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"].includes("/" + hash)) {
-                setCurrentRoute("/" + hash);
-            } else if (!hash) {
-                setCurrentRoute("/");
-            }
+            setCurrentRoute(resolveRoute());
         };
 
         window.addEventListener("hashchange", handleHashChange);

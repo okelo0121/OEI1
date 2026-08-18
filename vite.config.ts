@@ -9,14 +9,15 @@ const contentSecurityPolicy = [
   "img-src 'self' data:",
   "connect-src 'self'",
   "form-action 'self'",
-  "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   'upgrade-insecure-requests',
 ].join('; ');
 
 // Vite's dev server injects inline scripts for HMR, so the policy is only
-// applied to production builds.
+// applied to production builds. `frame-ancestors` is omitted because browsers
+// ignore it when a policy is delivered through a meta element; clickjacking
+// protection has to come from a response header at the host.
 function securityHeaders(): Plugin {
   return {
     name: 'oei-security-headers',

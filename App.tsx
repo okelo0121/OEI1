@@ -33,12 +33,10 @@ function App() {
         return () => window.removeEventListener("hashchange", handleHashChange);
     }, []);
 
-    const isFirstRender = useRef(true);
+    const userNavigatedRef = useRef(false);
     useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
+        if (!userNavigatedRef.current) return;
+        userNavigatedRef.current = false;
         scrollToTop();
     }, [currentRoute]);
 
@@ -47,6 +45,7 @@ function App() {
             scrollToTop();
             return;
         }
+        userNavigatedRef.current = true;
         if (route === "/") {
             history.pushState(null, "", window.location.pathname + window.location.search);
             setCurrentRoute("/");

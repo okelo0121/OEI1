@@ -104,6 +104,7 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [activePlugin, setActivePlugin] = useState<PluginItem | null>(null);
     const modalCloseBtnRef = useRef<HTMLButtonElement>(null);
+    const modalContentRef = useRef<HTMLDivElement>(null);
     const lastFocusedRef = useRef<HTMLElement | null>(null);
 
     const openPlugin = (plugin: PluginItem) => {
@@ -121,7 +122,29 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
         modalCloseBtnRef.current?.focus();
         document.body.style.overflow = "hidden";
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") closePlugin();
+            if (e.key === "Escape") {
+                closePlugin();
+                return;
+            }
+            if (e.key !== "Tab") return;
+            const modal = modalContentRef.current;
+            if (!modal) return;
+            const focusables = modal.querySelectorAll<HTMLElement>(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            const active = document.activeElement;
+            if (e.shiftKey) {
+                if (active === first || !modal.contains(active)) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else if (active === last || !modal.contains(active)) {
+                e.preventDefault();
+                first.focus();
+            }
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => {
@@ -267,6 +290,7 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
             {activePlugin && (
                 <div className="plugin-modal-backdrop" onClick={closePlugin}>
                     <div
+                        ref={modalContentRef}
                         className="plugin-modal-content"
                         role="dialog"
                         aria-modal="true"

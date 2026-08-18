@@ -86,7 +86,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                 </aside>
 
                 {/* Right Area: Header, Diagram, and Article Content */}
-                <main className="docs-main-area">
+                <div className="docs-main-area">
                     {/* Docs Header & Search */}
                     <div className="docs-header">
                         <div className="eyebrow">Documentation</div>
@@ -351,7 +351,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                             </article>
                         )}
                     </div>
-                </main>
+                </div>
             </div>
         </div>
     );

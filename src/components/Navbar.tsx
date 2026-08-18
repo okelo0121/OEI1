@@ -1,13 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface NavbarProps {
     currentRoute: string;
     onNavigate: (route: string) => void;
 }
 
-export function Logo({ onClick }: { onClick?: (e: React.MouseEvent) => void }) {
+export function Logo({ onClick }: { onClick?: (e: React.MouseEvent | React.KeyboardEvent) => void }) {
+    const interactiveProps = onClick
+        ? {
+              onClick,
+              role: "link" as const,
+              tabIndex: 0,
+              onKeyDown: (e: React.KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onClick(e);
+                  }
+              },
+              style: { cursor: "pointer" },
+              "aria-label": "OEI home",
+          }
+        : {};
+
     return (
-        <div className="logo" onClick={onClick} style={{ cursor: "pointer" }}>
+        <div className="logo" {...interactiveProps}>
             <span className="logo-mark">OEI</span>
             <span className="logo-chevron" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -26,13 +42,20 @@ export function Logo({ onClick }: { onClick?: (e: React.MouseEvent) => void }) {
 export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const handleNavClick = (e: React.MouseEvent, route: string) => {
+    const handleNavClick = (e: React.MouseEvent | React.KeyboardEvent, route: string) => {
         e.preventDefault();
         onNavigate(route);
-        window.location.hash = route === "/" ? "" : route;
-        window.scrollTo({ top: 0, behavior: "smooth" });
         setMobileMenuOpen(false);
     };
+
+    useEffect(() => {
+        if (!mobileMenuOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setMobileMenuOpen(false);
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [mobileMenuOpen]);
 
     return (
         <header className={`navbar ${mobileMenuOpen ? "mobile-open" : ""}`}>
@@ -43,6 +66,8 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                     className="mobile-menu-toggle"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     aria-label="Toggle Navigation Menu"
+                    aria-expanded={mobileMenuOpen}
+                    aria-controls="main-navigation"
                 >
                     {mobileMenuOpen ? (
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -59,10 +84,11 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 </button>
             </div>
 
-            <nav aria-label="Main Navigation" className={mobileMenuOpen ? "active" : ""}>
+            <nav id="main-navigation" aria-label="Main Navigation" className={mobileMenuOpen ? "active" : ""}>
                 <a
                     href="#docs"
                     className={currentRoute === "/docs" ? "nav-active" : ""}
+                    aria-current={currentRoute === "/docs" ? "page" : undefined}
                     onClick={(e) => handleNavClick(e, "/docs")}
                 >
                     Docs
@@ -70,6 +96,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 <a
                     href="#api"
                     className={currentRoute === "/api" ? "nav-active" : ""}
+                    aria-current={currentRoute === "/api" ? "page" : undefined}
                     onClick={(e) => handleNavClick(e, "/api")}
                 >
                     API
@@ -77,6 +104,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 <a
                     href="#plugins"
                     className={currentRoute === "/plugins" ? "nav-active" : ""}
+                    aria-current={currentRoute === "/plugins" ? "page" : undefined}
                     onClick={(e) => handleNavClick(e, "/plugins")}
                 >
                     Plugins
@@ -84,6 +112,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 <a
                     href="#mcp"
                     className={currentRoute === "/mcp" ? "nav-active" : ""}
+                    aria-current={currentRoute === "/mcp" ? "page" : undefined}
                     onClick={(e) => handleNavClick(e, "/mcp")}
                 >
                     MCP
@@ -91,6 +120,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
                 <a
                     href="#community"
                     className={currentRoute === "/community" ? "nav-active" : ""}
+                    aria-current={currentRoute === "/community" ? "page" : undefined}
                     onClick={(e) => handleNavClick(e, "/community")}
                 >
                     Community

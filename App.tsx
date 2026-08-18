@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./style.css";
 
 import { Navbar } from "./src/components/Navbar";
@@ -12,35 +12,47 @@ import { McpPage } from "./src/pages/McpPage";
 import { CommunityPage } from "./src/pages/CommunityPage";
 import { RegistryPage } from "./src/pages/RegistryPage";
 
-function App() {
-    const getInitialRoute = () => {
-        const hash = window.location.hash.replace("#", "");
-        if (["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"].includes("/" + hash)) {
-            return "/" + hash;
-        }
-        return "/";
-    };
+const ROUTES = ["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"];
 
-    const [currentRoute, setCurrentRoute] = useState<string>(getInitialRoute);
+function routeFromHash(): string {
+    const route = "/" + window.location.hash.replace(/^#\/?/, "");
+    return ROUTES.includes(route) ? route : "/";
+}
+
+export function scrollToTop() {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+}
+
+function App() {
+    const [currentRoute, setCurrentRoute] = useState<string>(routeFromHash);
 
     useEffect(() => {
-        const handleHashChange = () => {
-            const hash = window.location.hash.replace("#", "");
-            if (["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"].includes("/" + hash)) {
-                setCurrentRoute("/" + hash);
-            } else if (!hash) {
-                setCurrentRoute("/");
-            }
-        };
-
+        const handleHashChange = () => setCurrentRoute(routeFromHash());
         window.addEventListener("hashchange", handleHashChange);
         return () => window.removeEventListener("hashchange", handleHashChange);
     }, []);
 
+    const isFirstRender = useRef(true);
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+        scrollToTop();
+    }, [currentRoute]);
+
     const navigateTo = (route: string) => {
-        setCurrentRoute(route);
-        window.location.hash = route === "/" ? "" : route;
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (route === currentRoute) {
+            scrollToTop();
+            return;
+        }
+        if (route === "/") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+            setCurrentRoute("/");
+        } else {
+            window.location.hash = route;
+        }
     };
 
     return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface PluginsPageProps {
     onNavigate: (route: string) => void;
@@ -103,6 +103,32 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [activePlugin, setActivePlugin] = useState<PluginItem | null>(null);
+    const modalCloseBtnRef = useRef<HTMLButtonElement>(null);
+    const lastFocusedRef = useRef<HTMLElement | null>(null);
+
+    const openPlugin = (plugin: PluginItem) => {
+        lastFocusedRef.current = document.activeElement as HTMLElement | null;
+        setActivePlugin(plugin);
+    };
+
+    const closePlugin = () => {
+        setActivePlugin(null);
+        lastFocusedRef.current?.focus();
+    };
+
+    useEffect(() => {
+        if (!activePlugin) return;
+        modalCloseBtnRef.current?.focus();
+        document.body.style.overflow = "hidden";
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") closePlugin();
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.body.style.overflow = "";
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [activePlugin]);
 
     const filteredPlugins = pluginList.filter((plugin) => {
         const matchesSearch =
@@ -203,7 +229,16 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
                         <div
                             key={plugin.id}
                             className="plugin-card"
-                            onClick={() => setActivePlugin(plugin)}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`View plugin ${plugin.name}`}
+                            onClick={() => openPlugin(plugin)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    openPlugin(plugin);
+                                }
+                            }}
                         >
                             <div className="plugin-card-header">
                                 <strong>{plugin.name}</strong>
@@ -221,7 +256,7 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
 
                             <div className="plugin-card-footer">
                                 <span className="version-tag">{plugin.version}</span>
-                                <button className="button button-light button-small">View Plugin →</button>
+                                <button className="button button-light button-small" tabIndex={-1} aria-hidden="true">View Plugin →</button>
                             </div>
                         </div>
                     ))}
@@ -230,14 +265,20 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
 
             {/* Modal Detail Overlay for /plugins/[slug] */}
             {activePlugin && (
-                <div className="plugin-modal-backdrop" onClick={() => setActivePlugin(null)}>
-                    <div className="plugin-modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="plugin-modal-backdrop" onClick={closePlugin}>
+                    <div
+                        className="plugin-modal-content"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={`${activePlugin.name} plugin details`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="modal-header">
                             <div>
                                 <h2>{activePlugin.name}</h2>
                                 <span className="modal-author">Maintained by {activePlugin.author}</span>
                             </div>
-                            <button className="modal-close-btn" onClick={() => setActivePlugin(null)}>✕</button>
+                            <button ref={modalCloseBtnRef} className="modal-close-btn" aria-label="Close dialog" onClick={closePlugin}>✕</button>
                         </div>
 
                         <div className="modal-body">
@@ -269,7 +310,7 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
                                 <a href={activePlugin.githubUrl} target="_blank" rel="noopener noreferrer" className="button button-dark">
                                     View Source on GitHub ↗
                                 </a>
-                                <button onClick={() => setActivePlugin(null)} className="button button-light">
+                                <button onClick={closePlugin} className="button button-light">
                                     Close
                                 </button>
                             </div>

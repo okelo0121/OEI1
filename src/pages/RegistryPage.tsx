@@ -1,10 +1,8 @@
 import React from "react";
+import { DashedArrow } from "../components/ui/DashedArrow";
+import { PageProps } from "../lib/navigation";
 
-interface RegistryPageProps {
-    onNavigate: (route: string) => void;
-}
-
-export function RegistryPage({ onNavigate }: RegistryPageProps) {
+export function RegistryPage({ onNavigate }: PageProps) {
     return (
         <div className="registry-page">
             {/* Registry Hero */}
@@ -30,10 +28,7 @@ export function RegistryPage({ onNavigate }: RegistryPageProps) {
 
                         <div className="reg-arrow reg-arrow-1">
                             <div className="reg-dot" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="reg-node reg-node-solana">
@@ -44,10 +39,7 @@ export function RegistryPage({ onNavigate }: RegistryPageProps) {
 
                         <div className="reg-arrow reg-arrow-2">
                             <div className="reg-dot" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="reg-node reg-node-client">

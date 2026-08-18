@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-
-interface PluginsPageProps {
-    onNavigate: (route: string) => void;
-}
+import { CodeBlock } from "../components/ui/CodeBlock";
+import { ExternalLink } from "../components/ui/ExternalLink";
+import { SearchField } from "../components/ui/SearchField";
+import { GITHUB_URL } from "../lib/constants";
+import { PageProps } from "../lib/navigation";
+import { includesIgnoreCase } from "../lib/text";
 
 interface PluginItem {
     id: string;
@@ -30,7 +32,7 @@ const pluginList: PluginItem[] = [
         downloads: "142K",
         installCmd: "oei plugin add @oei/git-security",
         capabilities: ["Force-push interception", "Secret scanning", "Branch protection"],
-        githubUrl: "https://github.com/okelo0121/OEI1",
+        githubUrl: GITHUB_URL,
     },
     {
         id: "solana-verifier",
@@ -43,7 +45,7 @@ const pluginList: PluginItem[] = [
         downloads: "98K",
         installCmd: "oei plugin add @oei/solana-verifier",
         capabilities: ["On-chain verification", "Ed25519 signatures", "Reputation check"],
-        githubUrl: "https://github.com/okelo0121/OEI1",
+        githubUrl: GITHUB_URL,
     },
     {
         id: "docker-inspect",
@@ -56,7 +58,7 @@ const pluginList: PluginItem[] = [
         downloads: "85K",
         installCmd: "oei plugin add @oei/docker-inspect",
         capabilities: ["Privileged container flag audit", "Host mount warning", "Root execution detection"],
-        githubUrl: "https://github.com/okelo0121/OEI1",
+        githubUrl: GITHUB_URL,
     },
     {
         id: "npm-audit-pro",
@@ -69,7 +71,7 @@ const pluginList: PluginItem[] = [
         downloads: "45K",
         installCmd: "oei plugin add @oei/npm-audit-pro",
         capabilities: ["Typo-squatting detection", "Lifecycle script warning", "Peer dependency check"],
-        githubUrl: "https://github.com/okelo0121/OEI1",
+        githubUrl: GITHUB_URL,
     },
     {
         id: "python-bytecode",
@@ -82,7 +84,7 @@ const pluginList: PluginItem[] = [
         downloads: "32K",
         installCmd: "oei plugin add @oei/python-bytecode",
         capabilities: ["Bytecode inspection", "Socket creation audit", "Setup.py parsing"],
-        githubUrl: "https://github.com/okelo0121/OEI1",
+        githubUrl: GITHUB_URL,
     },
     {
         id: "terraform-guard",
@@ -95,19 +97,19 @@ const pluginList: PluginItem[] = [
         downloads: "67K",
         installCmd: "oei plugin add @oei/terraform-guard",
         capabilities: ["Plan diff analysis", "S3 public read check", "DB deletion warning"],
-        githubUrl: "https://github.com/okelo0121/OEI1",
+        githubUrl: GITHUB_URL,
     },
 ];
 
-export function PluginsPage({ onNavigate }: PluginsPageProps) {
+export function PluginsPage({ onNavigate }: PageProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [activePlugin, setActivePlugin] = useState<PluginItem | null>(null);
 
     const filteredPlugins = pluginList.filter((plugin) => {
         const matchesSearch =
-            plugin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            plugin.description.toLowerCase().includes(searchQuery.toLowerCase());
+            includesIgnoreCase(plugin.name, searchQuery) ||
+            includesIgnoreCase(plugin.description, searchQuery);
         const matchesCat =
             selectedCategory === "All" || plugin.category === selectedCategory;
         return matchesSearch && matchesCat;
@@ -170,18 +172,13 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
                     <h2>Explore Analyzers &amp; Plugins</h2>
 
                     <div className="search-filter-bar">
-                        <div className="plugin-search-input">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            <input
-                                type="text"
-                                placeholder="Search plugins by name, framework, or keyword..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
+                        <SearchField
+                            className="plugin-search-input"
+                            iconSize={16}
+                            placeholder="Search plugins by name, framework, or keyword..."
+                            value={searchQuery}
+                            onChange={setSearchQuery}
+                        />
 
                         <div className="cat-pill-group">
                             {["All", "Official", "Verified", "Community"].map((cat) => (
@@ -244,9 +241,7 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
                             <p className="modal-desc">{activePlugin.description}</p>
 
                             <h4>Installation Command</h4>
-                            <pre className="modal-code">
-                                <code>{activePlugin.installCmd}</code>
-                            </pre>
+                            <CodeBlock className="modal-code" code={activePlugin.installCmd} />
 
                             <h4>Capabilities</h4>
                             <ul className="caps-list">
@@ -256,19 +251,17 @@ export function PluginsPage({ onNavigate }: PluginsPageProps) {
                             </ul>
 
                             <h4>Configuration Example (oei.config.yaml)</h4>
-                            <pre className="modal-code">
-                                <code>{`plugins:
+                            <CodeBlock className="modal-code" code={`plugins:
   - name: "${activePlugin.name}"
     version: "${activePlugin.version}"
     enabled: true
     settings:
-      strictMode: true`}</code>
-                            </pre>
+      strictMode: true`} />
 
                             <div className="modal-actions">
-                                <a href={activePlugin.githubUrl} target="_blank" rel="noopener noreferrer" className="button button-dark">
+                                <ExternalLink href={activePlugin.githubUrl} className="button button-dark">
                                     View Source on GitHub ↗
-                                </a>
+                                </ExternalLink>
                                 <button onClick={() => setActivePlugin(null)} className="button button-light">
                                     Close
                                 </button>

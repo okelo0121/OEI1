@@ -1,9 +1,19 @@
 import React, { useState } from "react";
+import { GITHUB_URL } from "../lib/constants";
+import { createNavClickHandler, PageProps } from "../lib/navigation";
+import { ExternalLink } from "./ui/ExternalLink";
 
-interface NavbarProps {
+interface NavbarProps extends PageProps {
     currentRoute: string;
-    onNavigate: (route: string) => void;
 }
+
+const NAV_LINKS = [
+    { route: "/docs", label: "Docs" },
+    { route: "/api", label: "API" },
+    { route: "/plugins", label: "Plugins" },
+    { route: "/mcp", label: "MCP" },
+    { route: "/community", label: "Community" },
+];
 
 export function Logo({ onClick }: { onClick?: (e: React.MouseEvent) => void }) {
     return (
@@ -23,16 +33,26 @@ export function Logo({ onClick }: { onClick?: (e: React.MouseEvent) => void }) {
     );
 }
 
+type NavClickHandler = (event: React.MouseEvent, route: string) => void;
+
+function NavActions({ onNavClick }: { onNavClick: NavClickHandler }) {
+    return (
+        <>
+            <a href="#docs" className="button button-dark" onClick={(e) => onNavClick(e, "/docs")}>
+                Get Started
+            </a>
+
+            <ExternalLink href={GITHUB_URL} className="button button-light">
+                Star on GitHub
+            </ExternalLink>
+        </>
+    );
+}
+
 export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const handleNavClick = (e: React.MouseEvent, route: string) => {
-        e.preventDefault();
-        onNavigate(route);
-        window.location.hash = route === "/" ? "" : route;
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setMobileMenuOpen(false);
-    };
+    const handleNavClick = createNavClickHandler(onNavigate, () => setMobileMenuOpen(false));
 
     return (
         <header className={`navbar ${mobileMenuOpen ? "mobile-open" : ""}`}>
@@ -60,78 +80,24 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
             </div>
 
             <nav aria-label="Main Navigation" className={mobileMenuOpen ? "active" : ""}>
-                <a
-                    href="#docs"
-                    className={currentRoute === "/docs" ? "nav-active" : ""}
-                    onClick={(e) => handleNavClick(e, "/docs")}
-                >
-                    Docs
-                </a>
-                <a
-                    href="#api"
-                    className={currentRoute === "/api" ? "nav-active" : ""}
-                    onClick={(e) => handleNavClick(e, "/api")}
-                >
-                    API
-                </a>
-                <a
-                    href="#plugins"
-                    className={currentRoute === "/plugins" ? "nav-active" : ""}
-                    onClick={(e) => handleNavClick(e, "/plugins")}
-                >
-                    Plugins
-                </a>
-                <a
-                    href="#mcp"
-                    className={currentRoute === "/mcp" ? "nav-active" : ""}
-                    onClick={(e) => handleNavClick(e, "/mcp")}
-                >
-                    MCP
-                </a>
-                <a
-                    href="#community"
-                    className={currentRoute === "/community" ? "nav-active" : ""}
-                    onClick={(e) => handleNavClick(e, "/community")}
-                >
-                    Community
-                </a>
+                {NAV_LINKS.map((link) => (
+                    <a
+                        key={link.route}
+                        href={`#${link.route.slice(1)}`}
+                        className={currentRoute === link.route ? "nav-active" : ""}
+                        onClick={(e) => handleNavClick(e, link.route)}
+                    >
+                        {link.label}
+                    </a>
+                ))}
 
                 <div className="mobile-actions">
-                    <a
-                        href="#docs"
-                        className="button button-dark"
-                        onClick={(e) => handleNavClick(e, "/docs")}
-                    >
-                        Get Started
-                    </a>
-                    <a
-                        href="https://github.com/okelo0121/OEI1"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="button button-light"
-                    >
-                        Star on GitHub
-                    </a>
+                    <NavActions onNavClick={handleNavClick} />
                 </div>
             </nav>
 
             <div className="nav-actions">
-                <a
-                    href="#docs"
-                    className="button button-dark"
-                    onClick={(e) => handleNavClick(e, "/docs")}
-                >
-                    Get Started
-                </a>
-
-                <a
-                    href="https://github.com/okelo0121/OEI1"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="button button-light"
-                >
-                    Star on GitHub
-                </a>
+                <NavActions onNavClick={handleNavClick} />
             </div>
         </header>
     );

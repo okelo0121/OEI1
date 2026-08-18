@@ -1,10 +1,9 @@
 import React from "react";
+import { DashedArrow } from "../components/ui/DashedArrow";
+import { CodeBlock } from "../components/ui/CodeBlock";
+import { PageProps } from "../lib/navigation";
 
-interface McpPageProps {
-    onNavigate: (route: string) => void;
-}
-
-export function McpPage({ onNavigate }: McpPageProps) {
+export function McpPage({ onNavigate }: PageProps) {
     return (
         <div className="mcp-page">
             {/* MCP Hero */}
@@ -30,10 +29,7 @@ export function McpPage({ onNavigate }: McpPageProps) {
 
                         <div className="mcp-arrow mcp-arrow-1">
                             <div className="mcp-packet" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="mcp-node mcp-node-server">
@@ -44,10 +40,7 @@ export function McpPage({ onNavigate }: McpPageProps) {
 
                         <div className="mcp-arrow mcp-arrow-2">
                             <div className="mcp-packet" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="mcp-node mcp-node-oei">
@@ -58,10 +51,7 @@ export function McpPage({ onNavigate }: McpPageProps) {
 
                         <div className="mcp-arrow mcp-arrow-3">
                             <div className="mcp-packet" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="mcp-node mcp-node-rec">
@@ -128,9 +118,11 @@ export function McpPage({ onNavigate }: McpPageProps) {
                     <h2>Configuring MCP for Claude &amp; Cursor</h2>
 
                     <div className="config-snippet-group">
-                        <div className="config-header">claude_desktop_config.json</div>
-                        <pre className="mcp-code-block">
-                            <code>{`{
+                        <CodeBlock
+                            className="mcp-code-block"
+                            header="claude_desktop_config.json"
+                            headerClassName="config-header"
+                            code={`{
   "mcpServers": {
     "oei": {
       "command": "npx",
@@ -140,8 +132,8 @@ export function McpPage({ onNavigate }: McpPageProps) {
       }
     }
   }
-}`}</code>
-                        </pre>
+}`}
+                        />
                     </div>
                 </div>
 

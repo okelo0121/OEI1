@@ -1,17 +1,57 @@
 import React from "react";
 import { Logo } from "./Navbar";
+import { ExternalLink } from "./ui/ExternalLink";
+import { GITHUB_URL } from "../lib/constants";
+import { createNavClickHandler, PageProps } from "../lib/navigation";
 
-interface FooterProps {
-    onNavigate: (route: string) => void;
+interface FooterLink {
+    label: string;
+    hash?: string;
+    route?: string;
+    externalHref?: string;
 }
 
-export function Footer({ onNavigate }: FooterProps) {
-    const handleNavClick = (e: React.MouseEvent, route: string) => {
-        e.preventDefault();
-        onNavigate(route);
-        window.location.hash = route === "/" ? "" : route;
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+const FOOTER_COLUMNS: { title: string; links: FooterLink[] }[] = [
+    {
+        title: "Product",
+        links: [
+            { hash: "#overview", label: "Overview", route: "/" },
+            { hash: "#docs", label: "Docs", route: "/docs" },
+            { hash: "#api", label: "API Reference", route: "/api" },
+            { hash: "#mcp", label: "MCP Server", route: "/mcp" },
+            { hash: "#cli", label: "CLI", route: "/docs" },
+        ],
+    },
+    {
+        title: "Ecosystem",
+        links: [
+            { hash: "#plugins", label: "Plugins", route: "/plugins" },
+            { hash: "#registry", label: "Registry (Solana)", route: "/registry" },
+            { hash: "#community", label: "Contribute", route: "/community" },
+            { hash: "#docs", label: "Examples", route: "/docs" },
+        ],
+    },
+    {
+        title: "Community",
+        links: [
+            { label: "GitHub", externalHref: GITHUB_URL },
+            { hash: "#community", label: "Discussions", route: "/community" },
+            { hash: "#community", label: "Discord", route: "/community" },
+            { hash: "#community", label: "Blog", route: "/community" },
+        ],
+    },
+    {
+        title: "Legal",
+        links: [
+            { hash: "#privacy", label: "Privacy Policy" },
+            { hash: "#terms", label: "Terms of Service" },
+            { hash: "#security", label: "Security" },
+        ],
+    },
+];
+
+export function Footer({ onNavigate }: PageProps) {
+    const handleNavClick = createNavClickHandler(onNavigate);
 
     return (
         <footer className="footer-wrapper">
@@ -27,37 +67,27 @@ export function Footer({ onNavigate }: FooterProps) {
                     </p>
                 </div>
 
-                <div className="footer-column">
-                    <h4>Product</h4>
-                    <a href="#overview" onClick={(e) => handleNavClick(e, "/")}>Overview</a>
-                    <a href="#docs" onClick={(e) => handleNavClick(e, "/docs")}>Docs</a>
-                    <a href="#api" onClick={(e) => handleNavClick(e, "/api")}>API Reference</a>
-                    <a href="#mcp" onClick={(e) => handleNavClick(e, "/mcp")}>MCP Server</a>
-                    <a href="#cli" onClick={(e) => handleNavClick(e, "/docs")}>CLI</a>
-                </div>
+                {FOOTER_COLUMNS.map((column) => (
+                    <div className="footer-column" key={column.title}>
+                        <h4>{column.title}</h4>
 
-                <div className="footer-column">
-                    <h4>Ecosystem</h4>
-                    <a href="#plugins" onClick={(e) => handleNavClick(e, "/plugins")}>Plugins</a>
-                    <a href="#registry" onClick={(e) => handleNavClick(e, "/registry")}>Registry (Solana)</a>
-                    <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Contribute</a>
-                    <a href="#docs" onClick={(e) => handleNavClick(e, "/docs")}>Examples</a>
-                </div>
-
-                <div className="footer-column">
-                    <h4>Community</h4>
-                    <a href="https://github.com/okelo0121/OEI1" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Discussions</a>
-                    <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Discord</a>
-                    <a href="#community" onClick={(e) => handleNavClick(e, "/community")}>Blog</a>
-                </div>
-
-                <div className="footer-column">
-                    <h4>Legal</h4>
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#terms">Terms of Service</a>
-                    <a href="#security">Security</a>
-                </div>
+                        {column.links.map((link) =>
+                            link.externalHref ? (
+                                <ExternalLink href={link.externalHref} key={link.label}>
+                                    {link.label}
+                                </ExternalLink>
+                            ) : (
+                                <a
+                                    href={link.hash}
+                                    key={link.label}
+                                    onClick={link.route ? (e) => handleNavClick(e, link.route!) : undefined}
+                                >
+                                    {link.label}
+                                </a>
+                            )
+                        )}
+                    </div>
+                ))}
 
                 <div className="footer-newsletter">
                     <h4>Stay updated</h4>

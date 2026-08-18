@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-
-interface ApiPageProps {
-    onNavigate: (route: string) => void;
-}
+import { DashedArrow } from "../components/ui/DashedArrow";
+import { CodeBlock } from "../components/ui/CodeBlock";
+import { PageProps } from "../lib/navigation";
 
 const sampleCode = {
     curl: `curl -X POST https://api.oei.dev/v1/analyze \\
@@ -96,7 +95,37 @@ const sampleResponse = `{
   }
 }`;
 
-export function ApiPage({ onNavigate }: ApiPageProps) {
+const endpoints = [
+    { id: "analyze", method: "POST", path: "/v1/analyze" },
+    { id: "analyzers", method: "GET", path: "/v1/analyzers" },
+    { id: "verify", method: "POST", path: "/v1/verify" },
+    { id: "context", method: "GET", path: "/v1/context" },
+];
+
+const errorCodes = [
+    {
+        code: "400",
+        title: "Bad Context Request",
+        description: "The command or environment payload is missing required field properties.",
+    },
+    {
+        code: "401",
+        title: "Unauthorized",
+        description: "Missing or invalid API secret token in Authorization header.",
+    },
+    {
+        code: "422",
+        title: "Rule Mismatch",
+        description: "Specified analyzer plugin failed rule verification check.",
+    },
+    {
+        code: "500",
+        title: "Engine Timeout",
+        description: "Static rule evaluation exceeded maximum processing deadline.",
+    },
+];
+
+export function ApiPage({ onNavigate }: PageProps) {
     const [selectedTab, setSelectedTab] = useState<"curl" | "typescript" | "python" | "go">("curl");
     const [activeEndpoint, setActiveEndpoint] = useState<string>("analyze");
 
@@ -110,37 +139,16 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
                         <h3>Endpoints</h3>
 
                         <div className="endpoint-list">
-                            <button
-                                className={`endpoint-btn ${activeEndpoint === "analyze" ? "active" : ""}`}
-                                onClick={() => setActiveEndpoint("analyze")}
-                            >
-                                <span className="method-tag post">POST</span>
-                                <span className="path-text">/v1/analyze</span>
-                            </button>
-
-                            <button
-                                className={`endpoint-btn ${activeEndpoint === "analyzers" ? "active" : ""}`}
-                                onClick={() => setActiveEndpoint("analyzers")}
-                            >
-                                <span className="method-tag get">GET</span>
-                                <span className="path-text">/v1/analyzers</span>
-                            </button>
-
-                            <button
-                                className={`endpoint-btn ${activeEndpoint === "verify" ? "active" : ""}`}
-                                onClick={() => setActiveEndpoint("verify")}
-                            >
-                                <span className="method-tag post">POST</span>
-                                <span className="path-text">/v1/verify</span>
-                            </button>
-
-                            <button
-                                className={`endpoint-btn ${activeEndpoint === "context" ? "active" : ""}`}
-                                onClick={() => setActiveEndpoint("context")}
-                            >
-                                <span className="method-tag get">GET</span>
-                                <span className="path-text">/v1/context</span>
-                            </button>
+                            {endpoints.map((endpoint) => (
+                                <button
+                                    key={endpoint.id}
+                                    className={`endpoint-btn ${activeEndpoint === endpoint.id ? "active" : ""}`}
+                                    onClick={() => setActiveEndpoint(endpoint.id)}
+                                >
+                                    <span className={`method-tag ${endpoint.method.toLowerCase()}`}>{endpoint.method}</span>
+                                    <span className="path-text">{endpoint.path}</span>
+                                </button>
+                            ))}
                         </div>
 
                         <div className="api-auth-box">
@@ -174,10 +182,7 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
 
                                 <div className="api-arrow-group api-arrow-req">
                                     <div className="api-dot-packet api-dot-request" />
-                                    <svg width="60" height="16" viewBox="0 0 60 16">
-                                        <line x1="0" y1="8" x2="50" y2="8" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                        <polygon points="48,4 58,8 48,12" fill="#888888" />
-                                    </svg>
+                                    <DashedArrow size="lg" />
                                     <span className="arrow-label">payload</span>
                                 </div>
 
@@ -189,10 +194,7 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
 
                                 <div className="api-arrow-group api-arrow-res">
                                     <div className="api-dot-packet api-dot-response" />
-                                    <svg width="60" height="16" viewBox="0 0 60 16">
-                                        <line x1="0" y1="8" x2="50" y2="8" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                        <polygon points="48,4 58,8 48,12" fill="#888888" />
-                                    </svg>
+                                    <DashedArrow size="lg" />
                                     <span className="arrow-label">response</span>
                                 </div>
 
@@ -219,9 +221,7 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
                             </div>
 
                             <div className="code-block-wrapper">
-                                <pre className="code-snippet">
-                                    <code>{sampleCode[selectedTab]}</code>
-                                </pre>
+                                <CodeBlock className="code-snippet" code={sampleCode[selectedTab]} />
                             </div>
 
                             <div className="response-preview-header">
@@ -230,9 +230,7 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
                             </div>
 
                             <div className="code-block-wrapper response-block">
-                                <pre className="code-snippet">
-                                    <code>{sampleResponse}</code>
-                                </pre>
+                                <CodeBlock className="code-snippet" code={sampleResponse} />
                             </div>
                         </div>
 
@@ -241,29 +239,13 @@ export function ApiPage({ onNavigate }: ApiPageProps) {
                             <h2>HTTP Status &amp; Error Handling</h2>
 
                             <div className="error-grid">
-                                <div className="error-card">
-                                    <span className="error-code">400</span>
-                                    <strong>Bad Context Request</strong>
-                                    <p>The command or environment payload is missing required field properties.</p>
-                                </div>
-
-                                <div className="error-card">
-                                    <span className="error-code">401</span>
-                                    <strong>Unauthorized</strong>
-                                    <p>Missing or invalid API secret token in Authorization header.</p>
-                                </div>
-
-                                <div className="error-card">
-                                    <span className="error-code">422</span>
-                                    <strong>Rule Mismatch</strong>
-                                    <p>Specified analyzer plugin failed rule verification check.</p>
-                                </div>
-
-                                <div className="error-card">
-                                    <span className="error-code">500</span>
-                                    <strong>Engine Timeout</strong>
-                                    <p>Static rule evaluation exceeded maximum processing deadline.</p>
-                                </div>
+                                {errorCodes.map((error) => (
+                                    <div className="error-card" key={error.code}>
+                                        <span className="error-code">{error.code}</span>
+                                        <strong>{error.title}</strong>
+                                        <p>{error.description}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </main>

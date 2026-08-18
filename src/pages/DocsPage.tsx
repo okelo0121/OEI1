@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-
-interface DocsPageProps {
-    onNavigate: (route: string) => void;
-}
+import { DashedArrow } from "../components/ui/DashedArrow";
+import { CodeBlock } from "../components/ui/CodeBlock";
+import { SearchField } from "../components/ui/SearchField";
+import { PageProps } from "../lib/navigation";
+import { includesIgnoreCase } from "../lib/text";
 
 const docCategories = [
     {
@@ -49,15 +50,13 @@ const docCategories = [
     },
 ];
 
-export function DocsPage({ onNavigate }: DocsPageProps) {
+export function DocsPage({ onNavigate }: PageProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeDocId, setActiveDocId] = useState("intro");
 
     const filteredCategories = docCategories.map((cat) => ({
         ...cat,
-        items: cat.items.filter((item) =>
-            item.label.toLowerCase().includes(searchQuery.toLowerCase())
-        ),
+        items: cat.items.filter((item) => includesIgnoreCase(item.label, searchQuery)),
     })).filter((cat) => cat.items.length > 0);
 
     return (
@@ -96,18 +95,12 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                             MCP server configuration, and analyzer extension guides for OEI.
                         </p>
 
-                        <div className="docs-search-bar">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            <input
-                                type="text"
-                                placeholder="Search documentation (e.g., installation, risk, MCP, API)..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </div>
+                        <SearchField
+                            className="docs-search-bar"
+                            placeholder="Search documentation (e.g., installation, risk, MCP, API)..."
+                            value={searchQuery}
+                            onChange={setSearchQuery}
+                        />
                     </div>
 
                     {/* Primary Animated Technical Diagram: OEI Analysis Pipeline */}
@@ -122,10 +115,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
 
                             <div className="pipe-connector pipe-conn-1">
                                 <div className="pipe-pulse" />
-                                <svg width="40" height="12" viewBox="0 0 40 12">
-                                    <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                    <polygon points="30,3 38,6 30,9" fill="#888888" />
-                                </svg>
+                                <DashedArrow />
                             </div>
 
                             <div className="pipe-node pipe-node-env">
@@ -136,10 +126,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
 
                             <div className="pipe-connector pipe-conn-2">
                                 <div className="pipe-pulse" />
-                                <svg width="40" height="12" viewBox="0 0 40 12">
-                                    <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                    <polygon points="30,3 38,6 30,9" fill="#888888" />
-                                </svg>
+                                <DashedArrow />
                             </div>
 
                             <div className="pipe-node pipe-node-context">
@@ -150,10 +137,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
 
                             <div className="pipe-connector pipe-conn-3">
                                 <div className="pipe-pulse" />
-                                <svg width="40" height="12" viewBox="0 0 40 12">
-                                    <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                    <polygon points="30,3 38,6 30,9" fill="#888888" />
-                                </svg>
+                                <DashedArrow />
                             </div>
 
                             <div className="pipe-node pipe-node-analyzer">
@@ -164,10 +148,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
 
                             <div className="pipe-connector pipe-conn-4">
                                 <div className="pipe-pulse" />
-                                <svg width="40" height="12" viewBox="0 0 40 12">
-                                    <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                    <polygon points="30,3 38,6 30,9" fill="#888888" />
-                                </svg>
+                                <DashedArrow />
                             </div>
 
                             <div className="pipe-node pipe-node-result">
@@ -178,10 +159,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
 
                             <div className="pipe-connector pipe-conn-5">
                                 <div className="pipe-pulse" />
-                                <svg width="40" height="12" viewBox="0 0 40 12">
-                                    <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                    <polygon points="30,3 38,6 30,9" fill="#888888" />
-                                </svg>
+                                <DashedArrow />
                             </div>
 
                             <div className="pipe-node pipe-node-decision">
@@ -215,12 +193,11 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                                 </div>
 
                                 <h3>Quick Install</h3>
-                                <div className="code-block-header">Terminal / Shell</div>
-                                <pre className="doc-code-block">
-                                    <code>
-                                        {`# Install OEI CLI globally via npm\nnpm install -g @oei/cli\n\n# Verify installation\noei --version`}
-                                    </code>
-                                </pre>
+                                <CodeBlock
+                                    className="doc-code-block"
+                                    header="Terminal / Shell"
+                                    code={`# Install OEI CLI globally via npm\nnpm install -g @oei/cli\n\n# Verify installation\noei --version`}
+                                />
 
                                 <h3>How It Works</h3>
                                 <ol>
@@ -252,20 +229,14 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                                 <p>OEI supports macOS, Linux, and Windows operating systems across Node.js 18+ runtimes.</p>
 
                                 <h3>npm / pnpm / yarn</h3>
-                                <pre className="doc-code-block">
-                                    <code>{`npm install -g @oei/cli`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`npm install -g @oei/cli`} />
 
                                 <h3>Homebrew (macOS / Linux)</h3>
-                                <pre className="doc-code-block">
-                                    <code>{`brew install oei-protocol/tap/oei`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`brew install oei-protocol/tap/oei`} />
 
                                 <h3>Shell Auto-completion</h3>
                                 <p>Add completion to your <code>.zshrc</code> or <code>.bashrc</code>:</p>
-                                <pre className="doc-code-block">
-                                    <code>{`eval "$(oei completion zsh)"`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`eval "$(oei completion zsh)"`} />
                             </article>
                         )}
 
@@ -275,19 +246,13 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                                 <p>Learn how to inspect commands before executing them in your workspace.</p>
 
                                 <h3>1. Analyze a package installation</h3>
-                                <pre className="doc-code-block">
-                                    <code>{`oei analyze "npm install @solana/web3.js"`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`oei analyze "npm install @solana/web3.js"`} />
 
                                 <h3>2. Analyze a git operation</h3>
-                                <pre className="doc-code-block">
-                                    <code>{`oei analyze "git push origin main --force"`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`oei analyze "git push origin main --force"`} />
 
                                 <h3>3. Inspect current workspace context</h3>
-                                <pre className="doc-code-block">
-                                    <code>{`oei context show`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`oei context show`} />
                             </article>
                         )}
 
@@ -309,8 +274,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                                     OEI uses a modular pipeline decoupled into input handlers, context providers, static rule engines,
                                     cryptographic Solana signature verifiers, and client display layers.
                                 </p>
-                                <pre className="doc-code-block">
-                                    <code>{`+-------------------------------------------------------+
+                                <CodeBlock className="doc-code-block" code={`+-------------------------------------------------------+
 |                 Developer Interface                   |
 |           (CLI / VS Code / MCP Server / CI)           |
 +---------------------------+---------------------------+
@@ -327,8 +291,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
 +-------------------------------------------------------+
 |                 Solana Trust Layer                    |
 |      (On-Chain Registry & Cryptographic Signatures)   |
-+-------------------------------------------------------+`}</code>
-                                </pre>
++-------------------------------------------------------+`} />
                             </article>
                         )}
 
@@ -345,9 +308,7 @@ export function DocsPage({ onNavigate }: DocsPageProps) {
                                 </div>
 
                                 <h3>Usage Example</h3>
-                                <pre className="doc-code-block">
-                                    <code>{`# Example OEI CLI invocation\noei ${activeDocId} --verbose`}</code>
-                                </pre>
+                                <CodeBlock className="doc-code-block" code={`# Example OEI CLI invocation\noei ${activeDocId} --verbose`} />
                             </article>
                         )}
                     </div>

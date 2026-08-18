@@ -1,10 +1,11 @@
 import React from "react";
+import { DashedArrow } from "../components/ui/DashedArrow";
+import { CodeBlock } from "../components/ui/CodeBlock";
+import { ExternalLink } from "../components/ui/ExternalLink";
+import { GITHUB_URL } from "../lib/constants";
+import { PageProps } from "../lib/navigation";
 
-interface CommunityPageProps {
-    onNavigate: (route: string) => void;
-}
-
-export function CommunityPage({ onNavigate }: CommunityPageProps) {
+export function CommunityPage({ onNavigate }: PageProps) {
     return (
         <div className="community-page">
             {/* Community Hero */}
@@ -29,10 +30,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
 
                         <div className="comm-arrow comm-arrow-1">
                             <div className="comm-dot" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="comm-node comm-node-2">
@@ -42,10 +40,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
 
                         <div className="comm-arrow comm-arrow-2">
                             <div className="comm-dot" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="comm-node comm-node-3">
@@ -55,10 +50,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
 
                         <div className="comm-arrow comm-arrow-3">
                             <div className="comm-dot" />
-                            <svg width="40" height="12" viewBox="0 0 40 12">
-                                <line x1="0" y1="6" x2="32" y2="6" stroke="#aaaaaa" strokeWidth="1.5" strokeDasharray="4 4" />
-                                <polygon points="30,3 38,6 30,9" fill="#888888" />
-                            </svg>
+                            <DashedArrow />
                         </div>
 
                         <div className="comm-node comm-node-4">
@@ -85,7 +77,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
                         <div className="way-number">02</div>
                         <h3>Improve Documentation</h3>
                         <p>Help clarify CLI usage, create example configurations, or translate guides for international developers.</p>
-                        <a href="https://github.com/okelo0121/OEI1" target="_blank" rel="noopener noreferrer" className="text-link">Docs Repo →</a>
+                        <ExternalLink href={GITHUB_URL} className="text-link">Docs Repo →</ExternalLink>
                     </div>
 
                     <div className="way-card">
@@ -99,7 +91,7 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
                         <div className="way-number">04</div>
                         <h3>Report &amp; Verify Issues</h3>
                         <p>Submit bug reports, propose security RFCs, or participate in open protocol discussions.</p>
-                        <a href="https://github.com/okelo0121/OEI1" target="_blank" rel="noopener noreferrer" className="text-link">GitHub Discussions →</a>
+                        <ExternalLink href={GITHUB_URL} className="text-link">GitHub Discussions →</ExternalLink>
                     </div>
                 </div>
 
@@ -108,16 +100,14 @@ export function CommunityPage({ onNavigate }: CommunityPageProps) {
                     <h2>Creating Your First Rule</h2>
                     <p>Rules are defined in simple YAML or TypeScript manifests:</p>
 
-                    <pre className="comm-code-block">
-                        <code>{`# my-rule.yaml
+                    <CodeBlock className="comm-code-block" code={`# my-rule.yaml
 id: "no-force-push-main"
 severity: "HIGH"
 match:
   commandPattern: "^git push.*--(force|f).*(main|master)"
 analysis:
   message: "Force pushing to primary production branch is blocked by OEI policy."
-  recommendation: "Use feature branch PR or run git push without --force."`}</code>
-                    </pre>
+  recommendation: "Use feature branch PR or run git push without --force."`} />
                 </div>
             </section>
         </div>

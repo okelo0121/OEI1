@@ -112,6 +112,26 @@ npm run build
 
 The web app will run locally at **`http://localhost:5173/`**.
 
+### Running Tests
+
+Unit tests use [Vitest](https://vitest.dev) with React Testing Library in a jsdom environment:
+
+```bash
+# Run the full suite once
+npm test
+
+# Watch mode during development
+npm run test:watch
+
+# Run with a coverage report (text + HTML in coverage/)
+npm run test:coverage
+
+# Type-check without emitting output
+npm run typecheck
+```
+
+Tests live under `tests/`, mirroring the source layout (`tests/components/`, `tests/pages/`).
+
 ---
 
 ## Project Structure

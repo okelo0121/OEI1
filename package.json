@@ -10,7 +10,7 @@
   },
   "packageManager": "pnpm@11.15.1",
   "scripts": {
-    "build": "pnpm --filter \"./packages/*\" --filter \"./apps/*\" run build",
+    "build": "pnpm --filter \"./packages/*\" --filter \"./apps/*\" run build && vite build",
     "build:web": "vite build",
     "cli": "node apps/cli/dist/index.js",
     "dev": "vite",
@@ -20,6 +20,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
@@ -34,5 +38,9 @@
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vitest": "^2.1.9"
+  },
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }

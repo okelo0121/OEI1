@@ -44,6 +44,8 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
 
     const handleNavClick = (e: React.MouseEvent | React.KeyboardEvent, route: string) => {
         e.preventDefault();
+        window.location.hash = route === "/" ? "" : `#${route}`;
+        window.scrollTo({ top: 0, behavior: "smooth" });
         onNavigate(route);
         setMobileMenuOpen(false);
     };

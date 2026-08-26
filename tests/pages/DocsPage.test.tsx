@@ -41,7 +41,7 @@ describe("DocsPage", () => {
 
         await userEvent.type(search, "INSTALL");
 
-        expect(within(sidebar).getByRole("button", { name: "Installation" })).toBeInTheDocument();
+        expect(within(sidebar).getByRole("button", { name: /Installation/i })).toBeInTheDocument();
     });
 
     it("renders an empty sidebar when nothing matches", async () => {
@@ -63,7 +63,7 @@ describe("DocsPage", () => {
     });
 
     it.each([
-        ["Installation", "Installation Guide"],
+        [/Installation/i, "Installation Guide"],
         ["Quickstart", "Quickstart Guide"],
         ["What is OEI?", "What is OEI?"],
         ["Architecture", "OEI Architecture"],
@@ -77,14 +77,14 @@ describe("DocsPage", () => {
         expect(screen.queryByRole("heading", { level: 2, name: "Introduction to OEI" })).toBeNull();
     });
 
-    it("renders the generic placeholder article for topics without dedicated content", async () => {
+    it("renders the dedicated article for Building Analyzers", async () => {
         const { sidebar } = renderDocs();
 
         await userEvent.click(within(sidebar).getByRole("button", { name: "Building Analyzers" }));
 
-        expect(screen.getByRole("heading", { level: 2, name: "Building Analyzers" })).toBeInTheDocument();
-        expect(screen.getByText(/Detailed documentation and specifications/i)).toBeInTheDocument();
-        expect(screen.getByText(/oei analyzers --verbose/)).toBeInTheDocument();
+        expect(screen.getByRole("heading", { level: 2, name: "Building Custom Analyzers" })).toBeInTheDocument();
+        expect(screen.getByText(/Create custom static analysis rules using TypeScript/i)).toBeInTheDocument();
+        expect(screen.getByText(/no-force-push-main/)).toBeInTheDocument();
     });
 
     it("moves the active class to the newly selected topic", async () => {
@@ -99,10 +99,10 @@ describe("DocsPage", () => {
     it("keeps the selected topic visible while the sidebar is filtered", async () => {
         const { sidebar, search } = renderDocs();
 
-        await userEvent.click(within(sidebar).getByRole("button", { name: "Installation" }));
+        await userEvent.click(within(sidebar).getByRole("button", { name: /Installation/i }));
         await userEvent.type(search, "risk");
 
-        expect(within(sidebar).queryByRole("button", { name: "Installation" })).toBeNull();
+        expect(within(sidebar).queryByRole("button", { name: /Installation/i })).toBeNull();
         expect(screen.getByRole("heading", { level: 2, name: "Installation Guide" })).toBeInTheDocument();
     });
 });

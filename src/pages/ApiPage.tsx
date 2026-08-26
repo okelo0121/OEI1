@@ -5,7 +5,7 @@ interface ApiPageProps {
 }
 
 const sampleCode = {
-    curl: `curl -X POST https://api.oei.dev/v1/analyze \\
+    curl: `curl -X POST https://oei.paaco.xyz/api/v1/analyze \\
   -H "Authorization: Bearer oei_sec_9f82a1..." \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -49,7 +49,7 @@ print(response.findings)`,
 
 import (
     "fmt"
-    "github.com/oei-protocol/oei-go"
+    "github.com/okelo0121/OEI1/packages/go"
 )
 
 func main() {

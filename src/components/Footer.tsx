@@ -8,6 +8,8 @@ interface FooterProps {
 export function Footer({ onNavigate }: FooterProps) {
     const handleNavClick = (e: React.MouseEvent | React.KeyboardEvent, route: string) => {
         e.preventDefault();
+        window.location.hash = route === "/" ? "" : `#${route}`;
+        window.scrollTo({ top: 0, behavior: "smooth" });
         onNavigate(route);
     };
 
@@ -52,9 +54,9 @@ export function Footer({ onNavigate }: FooterProps) {
 
                 <div className="footer-column">
                     <h4>Legal</h4>
-                    <span className="footer-link-placeholder">Privacy Policy</span>
-                    <span className="footer-link-placeholder">Terms of Service</span>
-                    <span className="footer-link-placeholder">Security</span>
+                    <a href="#privacy" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
+                    <a href="#terms" onClick={(e) => e.preventDefault()}>Terms of Service</a>
+                    <a href="#security" onClick={(e) => e.preventDefault()}>Security</a>
                 </div>
 
                 <div className="footer-newsletter">

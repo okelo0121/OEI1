@@ -1,0 +1,25 @@
+{
+  "id": "fact_git-official-docs_g540veu",
+  "subject": "git",
+  "subjectType": "cli",
+  "factType": "best_practice",
+  "statement": "Git force pushes to shared branches risk overwriting commit history; --force-with-lease should be enforced.",
+  "impact": "Intercepts raw git push --force and recommends git push --force-with-lease.",
+  "severity": "medium",
+  "affectedVersions": {
+    "raw": "all versions"
+  },
+  "sourceId": "git-official-docs",
+  "evidence": {
+    "sourceId": "git-official-docs",
+    "sourceUrl": "https://git-scm.com/docs",
+    "sourceTitle": "Official Git Reference Documentation",
+    "contentHash": "ea6936bd49e53e36f086fb12ca93db3c84e1e2c4a5650ed3aefbb7fd5ade385e",
+    "snippet": "git push --force safety rules",
+    "publishedAt": "2026-08-05T05:33:40.000Z",
+    "authority": "official"
+  },
+  "confidence": 0.92,
+  "extractedAt": "2026-08-07T18:02:35.000Z",
+  "updatedAt": "2026-08-07T18:02:35.000Z"
+}

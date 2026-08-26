@@ -12,23 +12,31 @@ import { McpPage } from "./src/pages/McpPage";
 import { CommunityPage } from "./src/pages/CommunityPage";
 import { RegistryPage } from "./src/pages/RegistryPage";
 
-const ROUTES = ["/docs", "/api", "/plugins", "/mcp", "/community", "/registry"];
+const ROUTES = ["docs", "api", "plugins", "mcp", "community", "registry"];
 
 function routeFromHash(): string {
-    const route = "/" + window.location.hash.replace(/^#\/?/, "");
-    return ROUTES.includes(route) ? route : "/";
+    const route = window.location.hash.replace(/^#/, "");
+    return ROUTES.includes(route) ? `/${route}` : "/";
 }
 
 export function scrollToTop() {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    const reduceMotion = typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false;
+    if (typeof window !== "undefined" && typeof window.scrollTo === "function") {
+        window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    }
 }
 
 function App() {
     const [currentRoute, setCurrentRoute] = useState<string>(routeFromHash);
 
     useEffect(() => {
-        const handleHashChange = () => setCurrentRoute(routeFromHash());
+        const handleHashChange = () => {
+            const raw = window.location.hash.replace(/^#/, "");
+            if (raw && !ROUTES.includes(raw)) {
+                return;
+            }
+            setCurrentRoute(routeFromHash());
+        };
         window.addEventListener("hashchange", handleHashChange);
         return () => window.removeEventListener("hashchange", handleHashChange);
     }, []);
@@ -46,9 +54,9 @@ function App() {
             return;
         }
         userNavigatedRef.current = true;
+        setCurrentRoute(route);
         if (route === "/") {
-            history.pushState(null, "", window.location.pathname + window.location.search);
-            setCurrentRoute("/");
+            window.location.hash = "";
         } else {
             window.location.hash = route;
         }

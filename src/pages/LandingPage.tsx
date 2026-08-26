@@ -515,7 +515,7 @@ function EcosystemSection({ onNavigate }: { onNavigate: (route: string) => void 
                         reputation, and verification.
                     </p>
 
-                    <a href="#registry" onClick={(e) => { e.preventDefault(); onNavigate("/registry"); }} className="text-link">
+                    <a href="#registry" onClick={(e) => { e.preventDefault(); onNavigate("/registry"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="text-link">
                         Explore the registry <span>→</span>
                     </a>
                 </div>
@@ -607,81 +607,457 @@ function EcosystemSection({ onNavigate }: { onNavigate: (route: string) => void 
     );
 }
 
-function Testimonials() {
-    const testimonials = [
-        {
-            name: "Alex R.",
-            role: "Engineering Lead",
-            text: "OEI prevented so many mistakes in our CI pipeline. It's like a second pair of eyes that actually understands the context.",
-            brand: "github",
+interface ThreatScenario {
+    id: string;
+    badge: string;
+    badgeType: "critical" | "warn" | "allow";
+    title: string;
+    subtitle: string;
+    command: string;
+    riskScore: number;
+    riskLevel: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+    gateDecision: "BLOCK" | "WARN" | "ALLOW";
+    exitCode: number;
+    ruleId: string;
+    environment: {
+        branch: string;
+        node: string;
+        os: string;
+        lockfile: string;
+    };
+    threatDetails: string;
+    remediationCmd: string;
+    remediationExplanation: string;
+    telemetryLogs: string[];
+}
+
+const threatScenarios: ThreatScenario[] = [
+    {
+        id: "git-force-main",
+        badge: "PRODUCTION THREAT",
+        badgeType: "critical",
+        title: "Destructive Git Force Push",
+        subtitle: "Overwriting main branch commit history",
+        command: "git push origin main --force",
+        riskScore: 96,
+        riskLevel: "CRITICAL",
+        gateDecision: "BLOCK",
+        exitCode: 2,
+        ruleId: "oei-sec-git-001",
+        environment: {
+            branch: "main (protected)",
+            node: "v20.11.1",
+            os: "Linux / macOS",
+            lockfile: "pnpm-lock.yaml",
         },
-        {
-            name: "Priya S.",
-            role: "Developer Advocate",
-            text: "The recommendations are incredibly practical. OEI helps both juniors and seniors ship with confidence.",
-            brand: "vercel",
+        threatDetails: "Direct unauthenticated force-push to primary production branch permanently overwrites remote git refs and desynchronizes team repositories.",
+        remediationCmd: "git checkout -b feature/update-pipeline && git push origin feature/update-pipeline",
+        remediationExplanation: "Push to a feature branch and open a verified pull request instead of forcing history rewrites on main.",
+        telemetryLogs: [
+            "[01: AST Parser] Identified 'git push' with target ref 'main' and '--force' override flag.",
+            "[02: Context Discovery] Active git branch is 'main' (upstream: origin/main). 3 active pull requests detected.",
+            "[03: Knowledge Query] Matched deterministic policy 'oei-sec-git-001' (Severity: CRITICAL).",
+            "[04: Execution Gate] Gate status: BLOCK (exit 2). Process spawn terminated. Remote branch integrity protected.",
+        ],
+    },
+    {
+        id: "npm-postinstall-cve",
+        badge: "SUPPLY CHAIN EXPLOIT",
+        badgeType: "critical",
+        title: "Malicious Package Postinstall Hook",
+        subtitle: "Arbitrary code execution during npm install",
+        command: "npm install @crypto-wallet/core-leak-v2",
+        riskScore: 98,
+        riskLevel: "CRITICAL",
+        gateDecision: "BLOCK",
+        exitCode: 2,
+        ruleId: "oei-sec-npm-019",
+        environment: {
+            branch: "staging",
+            node: "v20.11.1",
+            os: "macOS 14.4",
+            lockfile: "package-lock.json",
         },
-        {
-            name: "Michael T.",
-            role: "AI Engineer",
-            text: "Finally, a standard way for AI agents to understand the impact of actions before executing them.",
-            brand: "anthropic",
+        threatDetails: "Target package contains an obfuscated `postinstall` script querying $HOME/.ssh and exfiltrating base64 environment payloads.",
+        remediationCmd: "npm install --ignore-scripts @crypto-wallet/core-leak-v2",
+        remediationExplanation: "Pass `--ignore-scripts` to bypass malicious hooks or use the verified package '@solana/web3.js'.",
+        telemetryLogs: [
+            "[01: AST Parser] Captured 'npm install' invocation targeting untrusted third-party package.",
+            "[02: Knowledge Store] Matched SHA-256 tarball against Solana-verified Security Advisory Registry.",
+            "[03: Safety Guard] Blocked unauthorized exfiltration targeting process.env and SSH keychains.",
+            "[04: Execution Gate] Gate status: BLOCK (exit 2). Package installation halted before lifecycle hooks spawned.",
+        ],
+    },
+    {
+        id: "solana-dirty-deploy",
+        badge: "DEPLOYMENT HAZARD",
+        badgeType: "warn",
+        title: "Solana Program Deploy on Dirty Tree",
+        subtitle: "Untracked bytecode on Solana mainnet/devnet",
+        command: "solana program deploy target/deploy/amm_contract.so",
+        riskScore: 48,
+        riskLevel: "MEDIUM",
+        gateDecision: "WARN",
+        exitCode: 0,
+        ruleId: "oei-sec-sol-008",
+        environment: {
+            branch: "devnet-test",
+            node: "v18.19.0",
+            os: "Ubuntu 22.04",
+            lockfile: "Cargo.lock",
         },
-    ];
+        threatDetails: "Working tree has 4 uncommitted files in /programs/amm. Deploying creates untracked on-chain bytecode with no verifiable Git tag.",
+        remediationCmd: "git commit -am 'chore: finalize program before deploy' && solana program deploy target/deploy/amm_contract.so",
+        remediationExplanation: "Commit all staged Rust contract changes so your on-chain bytecode maps 1:1 with an auditable commit hash.",
+        telemetryLogs: [
+            "[01: AST Parser] Identified Solana CLI contract deploy target: target/deploy/amm_contract.so.",
+            "[02: Context Discovery] Git status: DIRTY (4 modified files, 1 untracked file in working directory).",
+            "[03: Knowledge Query] Matched rule 'oei-sec-sol-008' (Auditability gap for smart contract deployment).",
+            "[04: Execution Gate] Gate status: WARN. Interactive confirmation [y/N] prompt required. Execution gated.",
+        ],
+    },
+    {
+        id: "safe-package-sync",
+        badge: "VERIFIED SAFE",
+        badgeType: "allow",
+        title: "Deterministic Dependency Sync",
+        subtitle: "Safe, reproducible package installation",
+        command: "npm ci",
+        riskScore: 6,
+        riskLevel: "LOW",
+        gateDecision: "ALLOW",
+        exitCode: 0,
+        ruleId: "oei-sec-safe-000",
+        environment: {
+            branch: "feature/ui-refresh",
+            node: "v20.11.1",
+            os: "Linux / macOS / Windows",
+            lockfile: "package-lock.json",
+        },
+        threatDetails: "Command performs a clean, locked dependency sync strictly respecting package-lock.json without modifying dependency trees.",
+        remediationCmd: "npm ci",
+        remediationExplanation: "No remediation required. Command strictly conforms to all execution security and determinism policies.",
+        telemetryLogs: [
+            "[01: AST Parser] Captured 'npm ci' deterministic sync command.",
+            "[02: Context Discovery] Validated package-lock.json checksums match package.json dependencies.",
+            "[03: Knowledge Query] Evaluated 18 static analyzers. 0 active security advisories found.",
+            "[04: Execution Gate] Gate status: ALLOW (exit 0). Immediate execution approved with zero prompts.",
+        ],
+    },
+];
+
+function LiveDefenseSimulator() {
+    const [activeScenarioId, setActiveScenarioId] = React.useState<string>("git-force-main");
+    const [autoPlay, setAutoPlay] = React.useState<boolean>(true);
+    const [copiedCmd, setCopiedCmd] = React.useState<boolean>(false);
+    const [copiedFix, setCopiedFix] = React.useState<boolean>(false);
+    const [copiedOeiCmd, setCopiedOeiCmd] = React.useState<boolean>(false);
+    const [progress, setProgress] = React.useState<number>(0);
+
+    const activeScenario = threatScenarios.find((s) => s.id === activeScenarioId) || threatScenarios[0];
+
+    // Auto-cycle timer
+    React.useEffect(() => {
+        if (!autoPlay) {
+            setProgress(0);
+            return;
+        }
+
+        const interval = 50;
+        const totalDuration = 6000;
+        const step = (interval / totalDuration) * 100;
+
+        const timer = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 100) {
+                    setActiveScenarioId((currentId) => {
+                        const currentIndex = threatScenarios.findIndex((s) => s.id === currentId);
+                        const nextIndex = (currentIndex + 1) % threatScenarios.length;
+                        return threatScenarios[nextIndex].id;
+                    });
+                    return 0;
+                }
+                return prev + step;
+            });
+        }, interval);
+
+        return () => clearInterval(timer);
+    }, [autoPlay, activeScenarioId]);
+
+    const handleSelectScenario = (id: string) => {
+        setActiveScenarioId(id);
+        setProgress(0);
+    };
+
+    const handleCopy = (text: string, type: "cmd" | "fix" | "oei") => {
+        navigator.clipboard.writeText(text);
+        if (type === "cmd") {
+            setCopiedCmd(true);
+            setTimeout(() => setCopiedCmd(false), 2000);
+        } else if (type === "fix") {
+            setCopiedFix(true);
+            setTimeout(() => setCopiedFix(false), 2000);
+        } else {
+            setCopiedOeiCmd(true);
+            setTimeout(() => setCopiedOeiCmd(false), 2000);
+        }
+    };
+
+    const getScoreColor = (score: number) => {
+        if (score >= 80) return "#dc2626";
+        if (score >= 40) return "#d97706";
+        return "#16a34a";
+    };
+
+    const circleCircumference = 326.7;
+    const strokeOffset = circleCircumference - (circleCircumference * activeScenario.riskScore) / 100;
 
     return (
-        <section className="testimonials-wrapper">
-            <div className="testimonials-section">
-                <h2>Loved by developers</h2>
+        <section className="threat-sim-wrapper">
+            <div className="threat-sim-container">
+                {/* Header with Eyebrow & Controls */}
+                <div className="sim-header">
+                    <div className="sim-header-left">
+                        <div className="eyebrow">Interactive Execution Sandbox</div>
+                        <h2>Simulate execution gates in real-time.</h2>
+                        <p>
+                            Experience how OEI intercepts developer commands, models execution context,
+                            correlates verified rules, and halts destructive production actions before they execute.
+                        </p>
+                    </div>
 
-                <div className="testimonial-grid">
-                    {testimonials.map((testimonial) => (
-                        <article className="testimonial-card" key={testimonial.name}>
-                            <div className="testimonial-header">
-                                <div className="avatar-img-wrapper">
-                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                                        <circle cx="20" cy="20" r="20" fill="#e2e8f0" />
-                                        <circle cx="20" cy="15" r="7" fill="#64748b" />
-                                        <path d="M8 34c0-6.627 5.373-12 12-12s12 5.373 12 12" fill="#64748b" />
-                                    </svg>
+                    <div className="sim-header-controls">
+                        <button
+                            className={`autoplay-toggle-btn ${autoPlay ? "active" : ""}`}
+                            onClick={() => setAutoPlay(!autoPlay)}
+                            title={autoPlay ? "Pause auto-cycle" : "Resume auto-cycle"}
+                        >
+                            <span className="control-icon">{autoPlay ? "⏸" : "▶"}</span>
+                            <span>{autoPlay ? "Auto-Cycling" : "Paused"}</span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Scenario Selector Tabs */}
+                <div className="sim-tabs-grid">
+                    {threatScenarios.map((scenario) => {
+                        const isActive = scenario.id === activeScenario.id;
+                        return (
+                            <button
+                                key={scenario.id}
+                                className={`sim-tab-card ${isActive ? "active" : ""}`}
+                                onClick={() => handleSelectScenario(scenario.id)}
+                            >
+                                <div className="sim-tab-top">
+                                    <span className="tab-rule-id">{scenario.ruleId}</span>
+                                    <span className={`tab-badge badge-${scenario.badgeType}`}>
+                                        {scenario.gateDecision}
+                                    </span>
                                 </div>
+                                <strong className="tab-title">{scenario.title}</strong>
+                                <code className="tab-cmd">{scenario.command}</code>
+                                {isActive && autoPlay && (
+                                    <div className="tab-progress-track">
+                                        <div
+                                            className="tab-progress-fill"
+                                            style={{
+                                                width: `${progress}%`,
+                                                backgroundColor: "#080808",
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Main Sandbox Dashboard */}
+                <div className="sim-board-grid">
+                    {/* Left: Terminal Interception & Remediation Console */}
+                    <div className="sim-console-card">
+                        <div className="console-titlebar">
+                            <div className="window-dots">
+                                <span className="dot dot-red" />
+                                <span className="dot dot-yellow" />
+                                <span className="dot dot-green" />
+                            </div>
+                            <span className="console-title-text">
+                                oei-gate — {activeScenario.environment.branch}
+                            </span>
+                            <div className="console-env-tags">
+                                <span className="env-pill">{activeScenario.environment.os}</span>
+                                <span className="env-pill">{activeScenario.environment.node}</span>
+                            </div>
+                        </div>
+
+                        {/* Command Input Bar */}
+                        <div className="console-command-bar">
+                            <div className="cmd-prompt-group">
+                                <span className="cmd-prompt">$</span>
+                                <span className="cmd-text">{activeScenario.command}</span>
+                            </div>
+                            <button
+                                className="copy-cmd-btn"
+                                onClick={() => handleCopy(activeScenario.command, "cmd")}
+                                title="Copy command"
+                            >
+                                {copiedCmd ? "Copied!" : "Copy"}
+                            </button>
+                        </div>
+
+                        {/* Telemetry Trace Body */}
+                        <div className="console-telemetry-body">
+                            <div className="telemetry-header">
+                                <span className="telemetry-status-live">● TELEMETRY TRACE</span>
+                                <span className="rule-ref">{activeScenario.ruleId}</span>
                             </div>
 
-                            <p>“{testimonial.text}”</p>
+                            <div className="telemetry-logs-list">
+                                {activeScenario.telemetryLogs.map((log, i) => (
+                                    <div key={i} className="telemetry-log-row">
+                                        <span className="log-arrow">›</span>
+                                        <span className="log-text">{log}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                            <div className="testimonial-footer">
-                                <div className="testimonial-author">
-                                    <strong>{testimonial.name}</strong>
-                                    <span>{testimonial.role}</span>
+                        {/* Remediation Diff Box */}
+                        <div className="console-remediation-box">
+                            <div className="remediation-header">
+                                <span className="remediation-label">EXECUTION POLICY &amp; REMEDIATION</span>
+                                <span className="decision-flag" style={{ color: getScoreColor(activeScenario.riskScore) }}>
+                                    {activeScenario.gateDecision} DECISION
+                                </span>
+                            </div>
+                            <p className="remediation-detail">{activeScenario.threatDetails}</p>
+
+                            <div className="remediation-diff-container">
+                                <div className="diff-row diff-blocked">
+                                    <span className="diff-tag">ACTION</span>
+                                    <code>{activeScenario.command}</code>
                                 </div>
-
-                                <div className="testimonial-brand-icon">
-                                    {testimonial.brand === "github" && (
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                                        </svg>
-                                    )}
-                                    {testimonial.brand === "vercel" && (
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 1L24 22H0L12 1Z" />
-                                        </svg>
-                                    )}
-                                    {testimonial.brand === "anthropic" && (
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 2l2.5 7.5H22l-6 4.5 2.5 7.5-6.5-5-6.5 5 2.5-7.5-6-4.5h7.5z" />
-                                        </svg>
-                                    )}
+                                <div className="diff-row diff-suggested">
+                                    <span className="diff-tag">RECOMMENDED</span>
+                                    <code>{activeScenario.remediationCmd}</code>
+                                    <button
+                                        className="copy-fix-btn"
+                                        onClick={() => handleCopy(activeScenario.remediationCmd, "fix")}
+                                        title="Copy safe remediation"
+                                    >
+                                        {copiedFix ? "Copied!" : "Copy"}
+                                    </button>
                                 </div>
                             </div>
-                        </article>
-                    ))}
+                            <p className="remediation-explanation">💡 {activeScenario.remediationExplanation}</p>
+                        </div>
+                    </div>
+
+                    {/* Right: Precision Risk Gauge & Environment Overview */}
+                    <div className="sim-radar-card">
+                        <div className="radar-card-header">
+                            <h3>Risk &amp; Gate Evaluation</h3>
+                            <span className={`radar-status-badge badge-${activeScenario.badgeType}`}>
+                                {activeScenario.riskLevel}
+                            </span>
+                        </div>
+
+                        {/* Precision Radial Score Gauge */}
+                        <div className="radar-visual-container">
+                            <div className="radial-concentric-bg" />
+
+                            <svg className="radial-score-svg" viewBox="0 0 120 120" width="160" height="160">
+                                <circle
+                                    className="radial-bg-track"
+                                    cx="60"
+                                    cy="60"
+                                    r="52"
+                                    strokeWidth="7"
+                                    fill="none"
+                                />
+                                <circle
+                                    className="radial-progress-bar"
+                                    cx="60"
+                                    cy="60"
+                                    r="52"
+                                    strokeWidth="7"
+                                    strokeDasharray={circleCircumference}
+                                    strokeDashoffset={strokeOffset}
+                                    stroke={getScoreColor(activeScenario.riskScore)}
+                                    strokeLinecap="round"
+                                    fill="none"
+                                    transform="rotate(-90 60 60)"
+                                />
+                            </svg>
+
+                            <div className="radar-score-center">
+                                <span className="score-num" style={{ color: getScoreColor(activeScenario.riskScore) }}>
+                                    {activeScenario.riskScore}
+                                </span>
+                                <span className="score-max">RISK SCORE</span>
+                            </div>
+                        </div>
+
+                        {/* Defense Metrics Grid */}
+                        <div className="defense-metrics-grid">
+                            <div className="metric-box">
+                                <span className="metric-title">GATE POLICY</span>
+                                <strong
+                                    className="metric-val"
+                                    style={{ color: getScoreColor(activeScenario.riskScore) }}
+                                >
+                                    {activeScenario.gateDecision}
+                                </strong>
+                            </div>
+
+                            <div className="metric-box">
+                                <span className="metric-title">EXIT CODE</span>
+                                <strong className="metric-val">exit {activeScenario.exitCode}</strong>
+                            </div>
+
+                            <div className="metric-box">
+                                <span className="metric-title">GIT BRANCH</span>
+                                <strong className="metric-val">{activeScenario.environment.branch}</strong>
+                            </div>
+
+                            <div className="metric-box">
+                                <span className="metric-title">ACTIVE LOCKFILE</span>
+                                <strong className="metric-val">{activeScenario.environment.lockfile}</strong>
+                            </div>
+                        </div>
+
+                        {/* Test with OEI CLI Button */}
+                        <div className="sim-cli-runner-box">
+                            <span className="runner-hint">Test this verification locally with CLI:</span>
+                            <div className="runner-code-row">
+                                <code>oei analyze "{activeScenario.command}"</code>
+                                <button
+                                    className="runner-copy-btn"
+                                    onClick={() => handleCopy(`oei analyze "${activeScenario.command}"`, "oei")}
+                                    title="Copy analyze command"
+                                >
+                                    {copiedOeiCmd ? "Copied!" : "Run Test"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     );
 }
 
+
 function FinalCTA({ onNavigate }: { onNavigate: (route: string) => void }) {
+    const [copied, setCopied] = React.useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText("npm install -g @okelo0121/oei-cli");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <div className="final-cta-wrapper">
             <div className="final-cta">
@@ -692,15 +1068,23 @@ function FinalCTA({ onNavigate }: { onNavigate: (route: string) => void }) {
                 <div className="cta-copy">
                     <h3>Ready to build safer?</h3>
                     <p>Get started in minutes and add execution intelligence to your workflow.</p>
+                    
+                    <div className="cta-install-bar">
+                        <span className="install-prompt">$</span>
+                        <code>npm install -g @okelo0121/oei-cli</code>
+                        <button className="cta-copy-btn" onClick={handleCopy} aria-label="Copy install command">
+                            {copied ? "Copied!" : "Copy"}
+                        </button>
+                    </div>
                 </div>
 
                 <div className="cta-actions">
-                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); }} className="button button-dark-contrast">
+                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-dark-contrast">
                         Install OEI CLI
                         <span className="btn-terminal-icon">&gt;_</span>
                     </a>
 
-                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); }} className="button button-light-contrast">
+                    <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-light-contrast">
                         Read the Docs
                         <span>→</span>
                     </a>
@@ -711,6 +1095,14 @@ function FinalCTA({ onNavigate }: { onNavigate: (route: string) => void }) {
 }
 
 export function LandingPage({ onNavigate }: { onNavigate: (route: string) => void }) {
+    const [copied, setCopied] = React.useState(false);
+
+    const handleCopyInstall = () => {
+        navigator.clipboard.writeText("npm install -g @okelo0121/oei-cli");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <div className="landing-page-content">
             <section className="hero-wrapper">
@@ -728,13 +1120,50 @@ export function LandingPage({ onNavigate }: { onNavigate: (route: string) => voi
                             alternatives — before you run them.
                         </p>
 
+                        {/* Interactive Global CLI Install Bar */}
+                        <div className="hero-install-badge-container">
+                            <div className="hero-install-bar">
+                                <span className="install-prompt">$</span>
+                                <span className="install-code">npm install -g @okelo0121/oei-cli</span>
+                                <button
+                                    className={`hero-copy-btn ${copied ? "copied" : ""}`}
+                                    onClick={handleCopyInstall}
+                                    title="Copy install command"
+                                    aria-label="Copy install command"
+                                >
+                                    {copied ? (
+                                        <>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                            <span>Copied!</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                            </svg>
+                                            <span>Copy</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                            <div className="hero-install-subnote">
+                                <span>Conflict with existing binary or symlinks?</span>
+                                <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+                                    Use <code>--force</code> (Read Guide →)
+                                </a>
+                            </div>
+                        </div>
+
                         <div className="hero-actions">
-                            <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); }} className="button button-dark-contrast button-large">
+                            <a href="#docs" onClick={(e) => { e.preventDefault(); onNavigate("/docs"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-dark-contrast button-large">
                                 Try OEI CLI
                                 <span className="btn-terminal-icon">&gt;_</span>
                             </a>
 
-                            <a href="#api" onClick={(e) => { e.preventDefault(); onNavigate("/api"); }} className="button button-light-contrast button-large">
+                            <a href="#api" onClick={(e) => { e.preventDefault(); onNavigate("/api"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="button button-light-contrast button-large">
                                 Explore API
                                 <span>→</span>
                             </a>
@@ -778,7 +1207,7 @@ export function LandingPage({ onNavigate }: { onNavigate: (route: string) => voi
 
             <EcosystemSection onNavigate={onNavigate} />
 
-            <Testimonials />
+            <LiveDefenseSimulator />
 
             <section className="dark-footer-group">
                 <FinalCTA onNavigate={onNavigate} />
@@ -787,3 +1216,4 @@ export function LandingPage({ onNavigate }: { onNavigate: (route: string) => voi
         </div>
     );
 }
+

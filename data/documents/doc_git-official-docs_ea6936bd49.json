@@ -1,0 +1,19 @@
+{
+  "id": "doc_git-official-docs_ea6936bd49",
+  "sourceId": "git-official-docs",
+  "url": "https://git-scm.com/docs",
+  "title": "Official Git Reference Documentation",
+  "content": "const currentTheme = localStorage.getItem(\"theme\")\nif (currentTheme) {\n\nconst prefersDarkScheme = window.matchMedia(\"(prefers-color-scheme: dark)\").matches\nif (prefersDarkScheme === (currentTheme === \"dark\")) localStorage.removeItem(\"theme\")\nelse if ((prefersDarkScheme && currentTheme === \"light\")\n|| (!prefersDarkScheme && currentTheme === \"dark\")) {\ndocument.documentElement.dataset.theme = currentTheme\n}\n}\n\nGit - Reference\n\n(/)\n\nconst taglines = [\n\"fast-version-control\",\n\"everything-is-local\",\n\"distributed-even-if-your-workflow-isnt\",\n\"local-branching-on-the-cheap\",\n\"distributed-is-the-new-centralized\"\n];\nvar tagline = taglines[Math.floor(Math.random() * taglines.length)];\ndocument.getElementById('tagline').innerHTML = '--' + tagline;\n\nAbout (/about)\n\nTrademark (/about/trademark)\n\nLearn (/learn)\n\nBook (/book)\n\nCheat Sheet (/cheat-sheet)\n\nVideos (/videos)\n\nExternal Links (/doc/ext)\n\nTools (/tools)\n\nCommand Line (/tools/command-line)\n\nGUIs (/tools/guis)\n\nHosting (/tools/hosting)\n\nReference (/docs)\n\nInstall (/install)\n\nCommunity (/community)\n\n=== Reference ===\n\nQuick reference guide:\nCheat Sheet (/cheat-sheet)\n\nComplete list of all commands (/docs/git#_git_commands)\n\n=== Setup and Config ===\n\ngit\n\nconfig\n\nhelp\n\nbugreport\n\nCredential helpers\n\n=== Getting and Creating Projects ===\n\ninit\n\nclone\n\n=== Basic Snapshotting ===\n\nadd\n\nstatus\n\ndiff\n\ncommit\n\nnotes\n\nrestore\n\nreset\n\nrm\n\nmv\n\n=== Branching and Merging ===\n\nbranch\n\ncheckout\n\nswitch\n\nmerge\n\nmergetool\n\nlog\n\nstash\n\ntag\n\nworktree\n\n=== Sharing and Updating Projects ===\n\nfetch\n\npull\n\npush\n\nremote\n\nsubmodule\n\n=== Inspection and Comparison ===\n\nshow\n\nlog\n\ndiff\n\ndifftool\n\nrange-diff\n\nshortlog\n\ndescribe\n\n=== Patching ===\n\napply\n\ncherry-pick\n\ndiff\n\nrebase\n\nrevert\n\n=== Debugging ===\n\nbisect\n\nblame\n\ngrep\n\n=== Guides ===\n\ngitattributes\n\nCommand-line interface conventions\n\nEveryday Git\n\nFrequently Asked Questions (FAQ)\n\nGlossary\n\nHooks\n\ngitignore\n\ngitmodules\n\nRevisions\n\nSubmodules\n\nTutorial\n\nWorkflows\n\nAll guides...\n\n=== Email ===\n\nam\n\napply\n\nimap-send\n\nformat-patch\n\nsend-email\n\nrequest-pull\n\n=== External Systems ===\n\nsvn\n\nfast-import\n\n=== Administration ===\n\nclean\n\ngc\n\nfsck\n\nreflog\n\nfilter-branch\n\ninstaweb\n\narchive\n\nbundle\n\n=== Server Admin ===\n\ndaemon\n\nupdate-server-info\n\n=== Plumbing Commands ===\n\ncat-file\n\ncheck-ignore\n\ncheckout-index\n\ncommit-tree\n\ncount-objects\n\ndiff-index\n\nfor-each-ref\n\nhash-object\n\nls-files\n\nls-tree\n\nmerge-base\n\nread-tree\n\nrev-list\n\nrev-parse\n\nshow-ref\n\nsymbolic-ref\n\nupdate-index\n\nupdate-ref\n\nverify-pack\n\nwrite-tree\n\nAbout this site (/site)\nPatches, suggestions, and comments are welcome.\n\nGit is a member of Software Freedom Conservancy (/sfc)\n",
+  "contentHash": "ea6936bd49e53e36f086fb12ca93db3c84e1e2c4a5650ed3aefbb7fd5ade385e",
+  "fetchedAt": "2026-08-07T18:02:34.999Z",
+  "publishedAt": "2026-08-05T05:33:40.000Z",
+  "metadata": {
+    "tool": "git",
+    "category": "cli",
+    "adapterUsed": "WebAdapter",
+    "httpStatus": 200,
+    "normalizedAt": "2026-08-07T18:02:35.000Z",
+    "originalLength": 15992,
+    "normalizedLength": 2647
+  }
+}

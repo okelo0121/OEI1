@@ -1,0 +1,13 @@
+{
+  "id": "solana-cli-docs",
+  "url": "https://docs.solana.com/cli",
+  "title": "Solana CLI Official Documentation",
+  "type": "official_docs",
+  "authority": "official",
+  "publisher": "Solana Foundation",
+  "enabled": true,
+  "metadata": {
+    "tool": "solana",
+    "category": "cli"
+  }
+}

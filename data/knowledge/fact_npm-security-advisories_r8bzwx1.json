@@ -1,0 +1,25 @@
+{
+  "id": "fact_npm-security-advisories_r8bzwx1",
+  "subject": "git",
+  "subjectType": "cli",
+  "factType": "best_practice",
+  "statement": "Git force pushes to shared branches risk overwriting commit history; --force-with-lease should be enforced.",
+  "impact": "Intercepts raw git push --force and recommends git push --force-with-lease.",
+  "severity": "medium",
+  "affectedVersions": {
+    "raw": "all versions"
+  },
+  "sourceId": "npm-security-advisories",
+  "evidence": {
+    "sourceId": "npm-security-advisories",
+    "sourceUrl": "https://github.com/advisories",
+    "sourceTitle": "NPM & Node.js Security Advisories",
+    "contentHash": "3894460a5c2bf53bebe8d60da6995353c017e56895c73f145bfb28ac373dfa1f",
+    "snippet": "git push --force safety rules",
+    "publishedAt": "2026-08-07T18:02:35.896Z",
+    "authority": "official"
+  },
+  "confidence": 0.92,
+  "extractedAt": "2026-08-07T18:02:35.900Z",
+  "updatedAt": "2026-08-07T18:02:35.900Z"
+}

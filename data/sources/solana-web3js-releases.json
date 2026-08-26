@@ -1,0 +1,13 @@
+{
+  "id": "solana-web3js-releases",
+  "url": "https://github.com/solana-labs/solana-web3.js/releases",
+  "title": "Solana Web3.js SDK Releases",
+  "type": "release_notes",
+  "authority": "official",
+  "publisher": "Solana Labs",
+  "enabled": true,
+  "metadata": {
+    "tool": "solana-web3.js",
+    "category": "sdk"
+  }
+}

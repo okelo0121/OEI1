@@ -1,0 +1,25 @@
+{
+  "id": "fact_solana-web3js-releases_bciwizo",
+  "subject": "git",
+  "subjectType": "cli",
+  "factType": "best_practice",
+  "statement": "Git force pushes to shared branches risk overwriting commit history; --force-with-lease should be enforced.",
+  "impact": "Intercepts raw git push --force and recommends git push --force-with-lease.",
+  "severity": "medium",
+  "affectedVersions": {
+    "raw": "all versions"
+  },
+  "sourceId": "solana-web3js-releases",
+  "evidence": {
+    "sourceId": "solana-web3js-releases",
+    "sourceUrl": "https://github.com/solana-labs/solana-web3.js/releases",
+    "sourceTitle": "Solana Web3.js SDK Releases",
+    "contentHash": "af68e8131137fd9df5592f673288ee31757fe362f365398514f91952d106e2f3",
+    "snippet": "git push --force safety rules",
+    "publishedAt": "2026-08-07T18:02:34.395Z",
+    "authority": "official"
+  },
+  "confidence": 0.92,
+  "extractedAt": "2026-08-07T18:02:34.409Z",
+  "updatedAt": "2026-08-07T18:02:34.409Z"
+}

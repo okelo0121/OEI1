@@ -1,0 +1,7 @@
+# Git Command Reference: Destructive Branch Push Safety
+
+## Overview
+Using `git push --force` overwrites the remote ref unconditionally, destroying unmerged commits made by team members.
+
+## Security & Best Practice
+Always enforce `git push --force-with-lease` when force-pushing. `--force-with-lease` verifies that the remote reference has not been updated since your last fetch before executing the push.

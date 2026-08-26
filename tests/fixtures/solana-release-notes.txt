@@ -1,0 +1,7 @@
+# Solana Web3.js Release Notes - v2.0.0
+
+## What's Changed in @solana/web3.js v2.0.0
+- Rebuilt from the ground up using async transaction building.
+- Deprecated legacy `Transaction` class constructors in favor of functional pipeline `buildTransaction()`.
+- Applications upgrading to @solana/web3.js v2.0 must update RPC connection interfaces to use modular transport providers.
+- Fixed buffer serialization overflow bug in legacy instruction encoding.

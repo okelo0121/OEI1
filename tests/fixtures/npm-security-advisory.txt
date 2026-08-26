@@ -1,0 +1,11 @@
+# GitHub Security Advisory: Malicious Postinstall Script Execution in NPM Packages
+
+## Advisory Overview
+Severity: HIGH
+Affected Versions: All npm versions (< 10.8.0)
+
+## Description
+NPM package installation automatically executes `postinstall` lifecycle scripts defined in `package.json`. Malicious third-party packages can exploit lifecycle hooks to run obfuscated shell scripts during `npm install`.
+
+## Recommendation
+Developers should use `--ignore-scripts` when installing untrusted third-party packages or enforce strict package lockfile audits.

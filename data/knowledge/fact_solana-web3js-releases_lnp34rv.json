@@ -1,0 +1,30 @@
+{
+  "id": "fact_solana-web3js-releases_lnp34rv",
+  "subject": "solana-web3.js",
+  "subjectType": "sdk",
+  "factType": "compatibility",
+  "statement": "@solana/web3.js v2.0 introduces async transaction building and modular pipeline builders.",
+  "impact": "Applications upgrading to web3.js v2 must replace legacy Transaction class calls with buildTransaction().",
+  "severity": "medium",
+  "affectedVersions": {
+    "maxVersion": "1.95.0",
+    "raw": "< 2.0.0"
+  },
+  "fixedVersions": {
+    "minVersion": "2.0.0",
+    "raw": ">= 2.0.0"
+  },
+  "sourceId": "solana-web3js-releases",
+  "evidence": {
+    "sourceId": "solana-web3js-releases",
+    "sourceUrl": "https://github.com/solana-labs/solana-web3.js/releases",
+    "sourceTitle": "Solana Web3.js SDK Releases",
+    "contentHash": "af68e8131137fd9df5592f673288ee31757fe362f365398514f91952d106e2f3",
+    "snippet": "web3.js v2 async transaction building",
+    "publishedAt": "2026-08-07T18:02:34.395Z",
+    "authority": "official"
+  },
+  "confidence": 0.89,
+  "extractedAt": "2026-08-07T18:02:34.409Z",
+  "updatedAt": "2026-08-07T18:02:34.409Z"
+}

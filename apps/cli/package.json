@@ -1,0 +1,47 @@
+{
+  "name": "@okelo0121/oei-cli",
+  "version": "0.1.0",
+  "description": "Open Execution Intelligence (OEI) CLI - Developer safety & execution gate protocol",
+  "license": "MIT",
+  "author": "OEI Contributors",
+  "homepage": "https://oei.paaco.xyz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okelo0121/OEI1.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "oei",
+    "developer-security",
+    "execution-gate",
+    "risk-analysis",
+    "cli-safety",
+    "solana",
+    "git"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "bin": {
+    "oei": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commander": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.7.2"
+  }
+}

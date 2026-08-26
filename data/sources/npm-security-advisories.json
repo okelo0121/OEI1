@@ -1,0 +1,13 @@
+{
+  "id": "npm-security-advisories",
+  "url": "https://github.com/advisories",
+  "title": "NPM & Node.js Security Advisories",
+  "type": "security_advisory",
+  "authority": "official",
+  "publisher": "GitHub Security Advisory Database",
+  "enabled": true,
+  "metadata": {
+    "tool": "npm",
+    "category": "package"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "fact_solana_01",
+  "subject": "solana",
+  "subjectType": "cli",
+  "factType": "breaking_change",
+  "statement": "Solana CLI v2.0+ deprecates legacy --fee-payer flags in favor of unified transaction signers.",
+  "impact": "Automated deployment scripts relying on standalone fee-payer flags must pass --signer arguments.",
+  "severity": "high",
+  "affectedVersions": {
+    "maxVersion": "1.18.99",
+    "raw": "< 2.0.0"
+  },
+  "fixedVersions": {
+    "minVersion": "2.0.0",
+    "raw": ">= 2.0.0"
+  },
+  "sourceId": "solana-cli-docs",
+  "evidence": {
+    "sourceId": "solana-cli-docs",
+    "sourceUrl": "https://docs.solana.com/cli",
+    "sourceTitle": "Solana CLI Official Documentation",
+    "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "snippet": "Solana CLI v2.0 deprecates standalone --fee-payer flags in favor of unified keypair signers.",
+    "publishedAt": "2026-08-07T17:00:00.000Z",
+    "authority": "official"
+  },
+  "confidence": 0.93,
+  "extractedAt": "2026-08-07T17:00:00.000Z",
+  "updatedAt": "2026-08-07T17:00:00.000Z"
+}

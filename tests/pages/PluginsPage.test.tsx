@@ -104,7 +104,7 @@ describe("PluginsPage", () => {
         const { grid } = renderPlugins();
 
         await userEvent.click(within(grid).getByText("@oei/git-security"));
-        await userEvent.click(screen.getByRole("button", { name: "✕" }));
+        await userEvent.click(screen.getByRole("button", { name: /Close dialog|✕/i }));
 
         expect(document.querySelector(".plugin-modal-content")).toBeNull();
     });

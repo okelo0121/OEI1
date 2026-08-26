@@ -1,0 +1,13 @@
+{
+  "id": "git-official-docs",
+  "url": "https://git-scm.com/docs",
+  "title": "Official Git Reference Documentation",
+  "type": "official_docs",
+  "authority": "official",
+  "publisher": "Git Project",
+  "enabled": true,
+  "metadata": {
+    "tool": "git",
+    "category": "cli"
+  }
+}

@@ -3,9 +3,9 @@
 > Transparent, execution-aware safety & risk intelligence protocol for developer terminals, CI/CD pipelines, and autonomous AI agents.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-v1.4.0-black.svg)](https://oei.dev)
-[![Build Status](https://img.shields.io/badge/build-passing-success.svg)](https://oei.dev)
-[![Solana Registry](https://img.shields.io/badge/solana-verified_registry-purple.svg)](https://oei.dev/#registry)
+[![Version](https://img.shields.io/badge/version-v1.4.0-black.svg)](https://oei.paaco.xyz)
+[![Build Status](https://img.shields.io/badge/build-passing-success.svg)](https://oei.paaco.xyz)
+[![Solana Registry](https://img.shields.io/badge/solana-verified_registry-purple.svg)](https://oei.paaco.xyz/#registry)
 
 ---
 
@@ -68,15 +68,48 @@ Modern software engineering involves complex terminal operations, multi-tier dep
 
 ### 1. Install CLI Globally
 
+The official OEI CLI is published to npm as **`@okelo0121/oei-cli`**:
+
 ```bash
-# via npm
-npm install -g @oei/cli
+# via npm (Recommended)
+npm install -g @okelo0121/oei-cli
+
+# via pnpm / yarn
+pnpm add -g @okelo0121/oei-cli
+yarn global add @okelo0121/oei-cli
 
 # via Homebrew (macOS / Linux)
-brew install oei-protocol/tap/oei
+brew install okelo0121/tap/oei
 ```
 
-### 2. Analyze a Command Before Execution
+#### Troubleshooting: When & Why to Use `--force`
+
+If you encounter errors during global installation (e.g. `EEXIST: file already exists` or strict peer dependency resolution issues), use the `--force` flag:
+
+```bash
+# Force global installation
+npm install -g @okelo0121/oei-cli --force
+
+# On Linux/macOS with global permission restrictions
+sudo npm install -g @okelo0121/oei-cli --force
+```
+
+**Why use `--force`?**
+1. **Existing Binary / Symlink Conflict (`EEXIST`)**: Overwrites stale `oei` binaries or local symlinks in `/usr/local/bin` or `%APPDATA%\npm`.
+2. **Strict Peer Dependency Conflicts (`ERESOLVE`)**: Bypasses strict npm v7+ dependency tree validation when other global packages have conflicting peer versions.
+3. **Corrupted npm Global Cache**: Forces npm to bypass outdated cached metadata and fetch fresh artifacts from `registry.npmjs.org`.
+
+### 2. Verify Installation
+
+```bash
+# Run environment health check
+oei doctor
+
+# Check version
+oei --version
+```
+
+### 3. Analyze a Command Before Execution
 
 ```bash
 # Analyze a package installation
@@ -97,8 +130,8 @@ To run the OEI web platform and documentation engine locally:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/oei-protocol/oei.git
-cd oei
+git clone https://github.com/okelo0121/OEI1.git
+cd OEI1
 
 # 2. Install dependencies
 npm install
@@ -110,7 +143,7 @@ npm run dev
 npm run build
 ```
 
-The web app will run locally at **`http://localhost:5173/`**.
+The web app will run locally at **`http://localhost:5173/`** or in production at **`https://oei.paaco.xyz/`**.
 
 ### Running Tests
 
@@ -166,7 +199,7 @@ OEI/
 You can query the OEI analysis engine directly via HTTP:
 
 ```bash
-curl -X POST https://api.oei.dev/v1/analyze \
+curl -X POST https://oei.paaco.xyz/api/v1/analyze \
   -H "Authorization: Bearer oei_sec_9f82a1..." \
   -H "Content-Type: application/json" \
   -d '{

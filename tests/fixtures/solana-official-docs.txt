@@ -1,0 +1,12 @@
+# Solana CLI Tool Suite Documentation
+
+## Overview
+The Solana CLI Tool Suite allows developers to deploy programs, manage accounts, and transfer SOL tokens on Devnet, Testnet, and Mainnet-Beta.
+
+## CLI v2.0 Signer Deprecation
+Beginning with Solana CLI Tool Suite v2.0.0, the standalone `--fee-payer` flag is deprecated in favor of unified transaction signer arguments `--signer <KEYPAIR>`.
+Automated deployment scripts relying on standalone fee-payer flags must pass explicit signer keypairs to avoid execution failures.
+
+## Key Features & Compatibility
+- Supports Agave client validator nodes.
+- Modular RPC connection pipelines for high-throughput transaction submission.

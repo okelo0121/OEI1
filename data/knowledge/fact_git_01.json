@@ -1,0 +1,25 @@
+{
+  "id": "fact_git_01",
+  "subject": "git",
+  "subjectType": "cli",
+  "factType": "best_practice",
+  "statement": "Git force pushes to shared branches risk overwriting commit history; --force-with-lease should be enforced.",
+  "impact": "Intercepts raw git push --force and recommends git push --force-with-lease.",
+  "severity": "medium",
+  "affectedVersions": {
+    "raw": "all versions"
+  },
+  "sourceId": "git-official-docs",
+  "evidence": {
+    "sourceId": "git-official-docs",
+    "sourceUrl": "https://git-scm.com/docs",
+    "sourceTitle": "Official Git Reference Documentation",
+    "contentHash": "f3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "snippet": "Using --force-with-lease ensures remote branch ref matches local tracking before pushing.",
+    "publishedAt": "2026-08-07T17:00:00.000Z",
+    "authority": "official"
+  },
+  "confidence": 0.95,
+  "extractedAt": "2026-08-07T17:00:00.000Z",
+  "updatedAt": "2026-08-07T17:00:00.000Z"
+}

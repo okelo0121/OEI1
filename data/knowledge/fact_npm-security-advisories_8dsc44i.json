@@ -1,0 +1,25 @@
+{
+  "id": "fact_npm-security-advisories_8dsc44i",
+  "subject": "npm",
+  "subjectType": "package",
+  "factType": "security_issue",
+  "statement": "NPM package installation can trigger arbitrary postinstall shell scripts.",
+  "impact": "Untrusted dependencies may execute malformed postinstall hooks during npm install.",
+  "severity": "high",
+  "affectedVersions": {
+    "raw": "all versions"
+  },
+  "sourceId": "npm-security-advisories",
+  "evidence": {
+    "sourceId": "npm-security-advisories",
+    "sourceUrl": "https://github.com/advisories",
+    "sourceTitle": "NPM & Node.js Security Advisories",
+    "contentHash": "3894460a5c2bf53bebe8d60da6995353c017e56895c73f145bfb28ac373dfa1f",
+    "snippet": "npm postinstall execution warning",
+    "publishedAt": "2026-08-07T18:02:35.896Z",
+    "authority": "official"
+  },
+  "confidence": 0.9,
+  "extractedAt": "2026-08-07T18:02:35.900Z",
+  "updatedAt": "2026-08-07T18:02:35.900Z"
+}

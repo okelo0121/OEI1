@@ -1,0 +1,30 @@
+{
+  "id": "fact_solana-cli-docs_6b38641a4a37",
+  "subject": "solana",
+  "subjectType": "cli",
+  "factType": "breaking_change",
+  "statement": "Solana CLI v2.0+ deprecates legacy --fee-payer flags in favor of unified transaction signers.",
+  "impact": "Automated deployment scripts relying on standalone fee-payer flags must pass --signer arguments.",
+  "severity": "high",
+  "affectedVersions": {
+    "maxVersion": "1.18.99",
+    "raw": "< 2.0.0"
+  },
+  "fixedVersions": {
+    "minVersion": "2.0.0",
+    "raw": ">= 2.0.0"
+  },
+  "sourceId": "solana-cli-docs",
+  "evidence": {
+    "sourceId": "solana-cli-docs",
+    "sourceUrl": "https://docs.anza.xyz/cli/",
+    "sourceTitle": "Solana CLI Official Documentation",
+    "contentHash": "acf10ee2a6a4affd17aeadce14343d045775a5afc5d4ff551314a0641fa3b8d9",
+    "snippet": "Solana CLI Tool Suite | Agave                    {\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"pos",
+    "publishedAt": "2026-08-26T09:24:06.000Z",
+    "authority": "official"
+  },
+  "confidence": 0.9,
+  "extractedAt": "2026-08-26T09:44:00.693Z",
+  "updatedAt": "2026-08-26T09:44:00.693Z"
+}

@@ -16,7 +16,7 @@ describe("ApiPage", () => {
         const { snippet } = renderApi();
 
         expect(screen.getByRole("button", { name: "CURL" })).toHaveClass("active");
-        expect(snippet().textContent).toContain("curl -X POST https://api.oei.dev/v1/analyze");
+        expect(snippet().textContent).toContain("curl -X POST https://oei.paaco.xyz/api/v1/analyze");
     });
 
     it.each([

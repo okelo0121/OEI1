@@ -1,0 +1,30 @@
+{
+  "id": "fact_solana-web3js-releases_5unhu80",
+  "subject": "solana",
+  "subjectType": "cli",
+  "factType": "breaking_change",
+  "statement": "Solana CLI v2.0+ deprecates legacy --fee-payer flags in favor of unified transaction signers.",
+  "impact": "Automated deployment scripts relying on standalone fee-payer flags must pass --signer arguments.",
+  "severity": "high",
+  "affectedVersions": {
+    "maxVersion": "1.18.99",
+    "raw": "< 2.0.0"
+  },
+  "fixedVersions": {
+    "minVersion": "2.0.0",
+    "raw": ">= 2.0.0"
+  },
+  "sourceId": "solana-web3js-releases",
+  "evidence": {
+    "sourceId": "solana-web3js-releases",
+    "sourceUrl": "https://github.com/solana-labs/solana-web3.js/releases",
+    "sourceTitle": "Solana Web3.js SDK Releases",
+    "contentHash": "af68e8131137fd9df5592f673288ee31757fe362f365398514f91952d106e2f3",
+    "snippet": ":root {\n--tab-size-preference: 4;\n}\n\npre, code {\ntab-size: var(--tab-size-preference);\n}\n\n{\"locale\":\"en\",\"featureFlags\":[\"actions_enable_background_st",
+    "publishedAt": "2026-08-07T18:02:34.395Z",
+    "authority": "official"
+  },
+  "confidence": 0.9,
+  "extractedAt": "2026-08-07T18:02:34.409Z",
+  "updatedAt": "2026-08-07T18:02:34.409Z"
+}

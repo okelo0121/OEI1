@@ -23,7 +23,7 @@ describe("LandingPage", () => {
     it("renders each narrative section heading", () => {
         renderLanding();
 
-        for (const heading of ["How OEI works", "Understand. Analyze. Decide.", "Loved by developers"]) {
+        for (const heading of ["How OEI works", "Understand. Analyze. Decide.", "Simulate execution gates in real-time."]) {
             expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
         }
         expect(screen.getByRole("heading", { name: "Open ecosystem. Built on trust." })).toBeInTheDocument();
@@ -48,13 +48,14 @@ describe("LandingPage", () => {
         expect(container.querySelectorAll(".risk-table-row")).toHaveLength(4);
     });
 
-    it("renders all three testimonials", () => {
+    it("renders the live threat simulation scenarios", () => {
         const { container } = renderLanding();
 
-        expect(container.querySelectorAll(".testimonial-card")).toHaveLength(3);
-        expect(screen.getByText("Alex R.")).toBeInTheDocument();
-        expect(screen.getByText("Priya S.")).toBeInTheDocument();
-        expect(screen.getByText("Michael T.")).toBeInTheDocument();
+        expect(container.querySelectorAll(".sim-tab-card")).toHaveLength(4);
+        expect(screen.getByText("Destructive Git Force Push")).toBeInTheDocument();
+        expect(screen.getByText("Malicious Package Postinstall Hook")).toBeInTheDocument();
+        expect(screen.getByText("Solana Program Deploy on Dirty Tree")).toBeInTheDocument();
+        expect(screen.getByText("Deterministic Dependency Sync")).toBeInTheDocument();
     });
 
     it.each([

@@ -1,0 +1,25 @@
+{
+  "id": "fact_solana-web3js-releases_zaakjo4",
+  "subject": "npm",
+  "subjectType": "package",
+  "factType": "security_issue",
+  "statement": "NPM package installation can trigger arbitrary postinstall shell scripts.",
+  "impact": "Untrusted dependencies may execute malformed postinstall hooks during npm install.",
+  "severity": "high",
+  "affectedVersions": {
+    "raw": "all versions"
+  },
+  "sourceId": "solana-web3js-releases",
+  "evidence": {
+    "sourceId": "solana-web3js-releases",
+    "sourceUrl": "https://github.com/solana-labs/solana-web3.js/releases",
+    "sourceTitle": "Solana Web3.js SDK Releases",
+    "contentHash": "af68e8131137fd9df5592f673288ee31757fe362f365398514f91952d106e2f3",
+    "snippet": "npm postinstall execution warning",
+    "publishedAt": "2026-08-07T18:02:34.395Z",
+    "authority": "official"
+  },
+  "confidence": 0.9,
+  "extractedAt": "2026-08-07T18:02:34.409Z",
+  "updatedAt": "2026-08-07T18:02:34.409Z"
+}

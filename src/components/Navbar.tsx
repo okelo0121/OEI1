@@ -41,6 +41,19 @@ export function Logo({ onClick }: { onClick?: (e: React.MouseEvent | React.Keybo
 
 export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const isScrolled = window.scrollY > 15;
+            setScrolled(isScrolled);
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const handleNavClick = (e: React.MouseEvent | React.KeyboardEvent, route: string) => {
         e.preventDefault();
@@ -60,7 +73,7 @@ export function Navbar({ currentRoute, onNavigate }: NavbarProps) {
     }, [mobileMenuOpen]);
 
     return (
-        <header className={`navbar ${mobileMenuOpen ? "mobile-open" : ""}`}>
+        <header className={`navbar ${mobileMenuOpen ? "mobile-open" : ""} ${scrolled ? "scrolled" : ""}`}>
             <div className="navbar-top-row">
                 <Logo onClick={(e) => handleNavClick(e, "/")} />
 
